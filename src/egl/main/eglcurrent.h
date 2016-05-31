@@ -51,6 +51,7 @@ extern "C" {
  */
 struct _egl_thread_info
 {
+   _EGLThreadInfo *Next; /* used to link threads */
    EGLint LastError;
    _EGLContext *CurrentContext;
    EGLenum CurrentAPI;
@@ -63,21 +64,6 @@ struct _egl_thread_info
    const char *CurrentFuncName;
    EGLLabelKHR CurrentObjectLabel;
 };
-
-
-/**
- * Return true if a client API enum is recognized.
- */
-static inline EGLBoolean
-_eglIsApiValid(EGLenum api)
-{
-#ifdef ANDROID
-   /* OpenGL is not a valid/supported API on Android */
-   return api == EGL_OPENGL_ES_API;
-#else
-   return (api == EGL_OPENGL_ES_API || api == EGL_OPENGL_API);
-#endif
-}
 
 
 extern _EGLThreadInfo *

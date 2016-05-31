@@ -216,6 +216,7 @@ _EGLDisplay *
 _eglFindDisplay(_EGLPlatformType plat, void *plat_dpy)
 {
    _EGLDisplay *dpy;
+   _EGLThreadInfo *thread = _eglGetCurrentThread();
 
    if (plat == _EGL_INVALID_PLATFORM)
       return NULL;
@@ -241,8 +242,12 @@ _eglFindDisplay(_EGLPlatformType plat, void *plat_dpy)
          /* add to the display list */ 
          dpy->Next = _eglGlobal.DisplayList;
          _eglGlobal.DisplayList = dpy;
+         dpy->ThreadList = NULL;
       }
    }
+
+   thread->Next = dpy->ThreadList;
+   dpy->ThreadList = thread;
 
    mtx_unlock(_eglGlobal.Mutex);
 
