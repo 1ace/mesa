@@ -1311,6 +1311,15 @@ EGLAPI EGLuint64NV EGLAPIENTRY eglGetSystemTimeNV (void);
 #define EGL_NATIVE_SURFACE_TIZEN          0x32A1
 #endif /* EGL_TIZEN_image_native_surface */
 
+#ifndef EGL_KHR_display_reference
+#define EGL_KHR_display_reference 1
+#define EGL_TRACK_REFERENCES_KHR          0x3352
+typedef EGLBoolean (EGLAPIENTRYP PFNEGLQUERYDISPLAYATTRIBKHRPROC) (EGLDisplay dpy, EGLint name, EGLAttrib *value);
+#ifdef EGL_EGLEXT_PROTOTYPES
+EGLAPI EGLBoolean EGLAPIENTRY eglQueryDisplayAttribKHR (EGLDisplay dpy, EGLint name, EGLAttrib *value);
+#endif
+#endif /* EGL_KHR_display_reference */
+
 #include <EGL/eglmesaext.h>
 #include <EGL/eglextchromium.h>
 

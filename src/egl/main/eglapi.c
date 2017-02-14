@@ -636,6 +636,11 @@ eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
       _eglCreateAPIsString(disp);
       snprintf(disp->VersionString, sizeof(disp->VersionString),
                "%d.%d", disp->Version / 10, disp->Version % 10);
+
+      disp->RefCount = 1;
+   }
+   else {
+      disp->RefCount++;
    }
 
    /* Update applications version of major and minor if not NULL */
@@ -657,6 +662,14 @@ eglTerminate(EGLDisplay dpy)
 
    if (!disp)
       RETURN_EGL_ERROR(NULL, EGL_BAD_DISPLAY, EGL_FALSE);
+
+   if (disp->TrackReferences)
+      disp->RefCount--;
+   else
+      disp->RefCount = 0;
+
+   if (disp->RefCount > 0)
+      RETURN_EGL_SUCCESS(disp, EGL_TRUE);
 
    if (disp->Initialized) {
       _EGLDriver *drv = disp->Driver;
@@ -2634,17 +2647,28 @@ eglQueryDisplayAttribEXT(EGLDisplay dpy,
    _EGLDisplay *disp = _eglLockDisplay(dpy);
    _EGLDriver *drv;
 
-   _EGL_FUNC_START(NULL, EGL_NONE, NULL, EGL_FALSE);
+   _EGL_FUNC_START(disp, EGL_OBJECT_DISPLAY_KHR, dpy, EGL_FALSE);
    _EGL_CHECK_DISPLAY(disp, EGL_FALSE, drv);
 
    switch (attribute) {
    case EGL_DEVICE_EXT:
       *value = (EGLAttrib) disp->Device;
       break;
+   case EGL_TRACK_REFERENCES_KHR:
+      *value = disp->TrackReferences;
+      break;
    default:
       RETURN_EGL_ERROR(disp, EGL_BAD_ATTRIBUTE, EGL_FALSE);
    }
    RETURN_EGL_SUCCESS(disp, EGL_TRUE);
+}
+
+static EGLBoolean EGLAPIENTRY
+eglQueryDisplayAttribKHR(EGLDisplay dpy,
+                         EGLint attribute,
+                         EGLAttrib *value)
+{
+   return eglQueryDisplayAttribEXT(dpy, attribute, value);
 }
 
 __eglMustCastToProperFunctionPointerType EGLAPIENTRY

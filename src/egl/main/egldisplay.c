@@ -222,6 +222,8 @@ _eglFindDisplay(_EGLPlatformType plat, void *plat_dpy)
 
    mtx_lock(_eglGlobal.Mutex);
 
+   //TODO: make this depend on EGL_KHR_display_reference
+
    /* search the display list first */
    dpy = _eglGlobal.DisplayList;
    while (dpy) {
@@ -450,6 +452,7 @@ static EGLBoolean
 _eglParseX11DisplayAttribList(_EGLDisplay *display,
                               const EGLAttrib *attrib_list)
 {
+   EGLBoolean track_references = EGL_FALSE;
    int i;
 
    if (attrib_list == NULL) {
@@ -460,14 +463,31 @@ _eglParseX11DisplayAttribList(_EGLDisplay *display,
       EGLAttrib attrib = attrib_list[i];
       EGLAttrib value = attrib_list[i + 1];
 
+      switch (attrib) {
+
+      /* EGL_KHR_display_reference recognizes the optional boolean attribute
+       * EGL_TRACK_REFERENCES_KHR
+       */
+      case EGL_TRACK_REFERENCES_KHR:
+         track_references = value;
+         break;
+
       /* EGL_EXT_platform_x11 recognizes exactly one attribute,
        * EGL_PLATFORM_X11_SCREEN_EXT, which is optional.
        */
-      if (attrib != EGL_PLATFORM_X11_SCREEN_EXT)
-         return _eglError(EGL_BAD_ATTRIBUTE, "eglGetPlatformDisplay");
+      case EGL_PLATFORM_X11_SCREEN_EXT:
+         display->Options.Platform = (void *)(uintptr_t)value;
 
-      display->Options.Platform = (void *)(uintptr_t)value;
+         if (value == 0)
+            continue;
+         /* fall through */
+
+      default:
+         return _eglError(EGL_BAD_ATTRIBUTE, "eglGetPlatformDisplay");
+      }
    }
+
+   display->TrackReferences = track_references;
 
    return EGL_TRUE;
 }
@@ -493,52 +513,159 @@ _eglGetX11Display(Display *native_display,
 #endif /* HAVE_X11_PLATFORM */
 
 #ifdef HAVE_DRM_PLATFORM
+static EGLBoolean
+_eglParseDRMDisplayAttribList(_EGLDisplay *display,
+                              const EGLAttrib *attrib_list)
+{
+   EGLBoolean track_references = EGL_FALSE;
+   int i;
+
+   if (attrib_list == NULL) {
+      return EGL_TRUE;
+   }
+
+   for (i = 0; attrib_list[i] != EGL_NONE; i += 2) {
+      EGLint attrib = attrib_list[i];
+      EGLint value = attrib_list[i + 1];
+
+      switch (attrib) {
+
+      /* EGL_KHR_display_reference recognizes the optional boolean attribute
+       * EGL_TRACK_REFERENCES_KHR
+       */
+      case EGL_TRACK_REFERENCES_KHR:
+         track_references = value;
+         break;
+
+      default:
+         _eglError(EGL_BAD_ATTRIBUTE, "eglGetPlatformDisplay");
+         return EGL_FALSE;
+      }
+   }
+
+   display->TrackReferences = track_references;
+
+   return EGL_TRUE;
+}
+
 _EGLDisplay*
 _eglGetGbmDisplay(struct gbm_device *native_display,
                   const EGLAttrib *attrib_list)
 {
-   /* EGL_MESA_platform_gbm recognizes no attributes. */
-   if (attrib_list != NULL && attrib_list[0] != EGL_NONE) {
-      _eglError(EGL_BAD_ATTRIBUTE, "eglGetPlatformDisplay");
+   _EGLDisplay *dpy = _eglFindDisplay(_EGL_PLATFORM_DRM, native_display);
+
+   if (!_eglParseDRMDisplayAttribList(dpy, attrib_list)) {
       return NULL;
    }
 
-   return _eglFindDisplay(_EGL_PLATFORM_DRM, native_display);
+   return dpy;
 }
 #endif /* HAVE_DRM_PLATFORM */
 
 #ifdef HAVE_WAYLAND_PLATFORM
+static EGLBoolean
+_eglParseWaylandDisplayAttribList(_EGLDisplay *display,
+                                  const EGLAttrib *attrib_list)
+{
+   EGLBoolean track_references = EGL_FALSE;
+   int i;
+
+   if (attrib_list == NULL) {
+      return EGL_TRUE;
+   }
+
+   for (i = 0; attrib_list[i] != EGL_NONE; i += 2) {
+      EGLint attrib = attrib_list[i];
+      EGLint value = attrib_list[i + 1];
+
+      switch (attrib) {
+
+      /* EGL_KHR_display_reference recognizes the optional boolean attribute
+       * EGL_TRACK_REFERENCES_KHR
+       */
+      case EGL_TRACK_REFERENCES_KHR:
+         track_references = value;
+         break;
+
+      default:
+         _eglError(EGL_BAD_ATTRIBUTE, "eglGetPlatformDisplay");
+         return EGL_FALSE;
+      }
+   }
+
+   display->TrackReferences = track_references;
+
+   return EGL_TRUE;
+}
+
 _EGLDisplay*
 _eglGetWaylandDisplay(struct wl_display *native_display,
                       const EGLAttrib *attrib_list)
 {
-   /* EGL_EXT_platform_wayland recognizes no attributes. */
-   if (attrib_list != NULL && attrib_list[0] != EGL_NONE) {
-      _eglError(EGL_BAD_ATTRIBUTE, "eglGetPlatformDisplay");
+   _EGLDisplay *dpy = _eglFindDisplay(_EGL_PLATFORM_WAYLAND, native_display);
+
+   if (!_eglParseWaylandDisplayAttribList(dpy, attrib_list)) {
       return NULL;
    }
 
-   return _eglFindDisplay(_EGL_PLATFORM_WAYLAND, native_display);
+   return dpy;
 }
 #endif /* HAVE_WAYLAND_PLATFORM */
 
 #ifdef HAVE_SURFACELESS_PLATFORM
+static EGLBoolean
+_eglParseSurfacelessDisplayAttribList(_EGLDisplay *display,
+                                      const EGLAttrib *attrib_list)
+{
+   EGLBoolean track_references = EGL_FALSE;
+   int i;
+
+   if (attrib_list == NULL) {
+      return EGL_TRUE;
+   }
+
+   for (i = 0; attrib_list[i] != EGL_NONE; i += 2) {
+      EGLint attrib = attrib_list[i];
+      EGLint value = attrib_list[i + 1];
+
+      switch (attrib) {
+
+      /* EGL_KHR_display_reference recognizes the optional boolean attribute
+       * EGL_TRACK_REFERENCES_KHR
+       */
+      case EGL_TRACK_REFERENCES_KHR:
+         track_references = value;
+         break;
+
+      default:
+         _eglError(EGL_BAD_ATTRIBUTE, "eglGetPlatformDisplay");
+         return EGL_FALSE;
+      }
+   }
+
+   display->TrackReferences = track_references;
+
+   return EGL_TRUE;
+}
+
 _EGLDisplay*
 _eglGetSurfacelessDisplay(void *native_display,
                           const EGLAttrib *attrib_list)
 {
+   _EGLDisplay *dpy;
+
    /* This platform has no native display. */
    if (native_display != NULL) {
       _eglError(EGL_BAD_PARAMETER, "eglGetPlatformDisplay");
       return NULL;
    }
 
-   /* This platform recognizes no display attributes. */
-   if (attrib_list != NULL && attrib_list[0] != EGL_NONE) {
-      _eglError(EGL_BAD_ATTRIBUTE, "eglGetPlatformDisplay");
+   dpy = _eglFindDisplay(_EGL_PLATFORM_SURFACELESS, native_display);
+
+   if (!_eglParseSurfacelessDisplayAttribList(dpy, attrib_list)) {
       return NULL;
    }
 
-   return _eglFindDisplay(_EGL_PLATFORM_SURFACELESS, native_display);
+   return dpy;
 }
 #endif /* HAVE_SURFACELESS_PLATFORM */
