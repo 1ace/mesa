@@ -252,7 +252,7 @@ struct gl_config
    GLint yInverted;
 
    /* EXT_framebuffer_sRGB */
-   GLint sRGBCapable;
+   GLint sRGBCapable; //TODO: turn into a colorSpace enum?
 };
 
 

@@ -65,7 +65,11 @@ struct gl_format_info
    GLubyte DepthBits;
    GLubyte StencilBits;
 
-   bool IsSRGBFormat;
+   /*
+    * GL_LINEAR, GL_SRGB,
+    */
+   GLenum ColorSpace;
+   GLint IsSRGBFormat; //FIXME: remove this line
 
    /**
     * To describe compressed formats.  If not compressed, Width=Height=Depth=1.
@@ -592,7 +596,7 @@ GLenum
 _mesa_get_format_color_encoding(mesa_format format)
 {
    const struct gl_format_info *info = _mesa_get_format_info(format);
-   return info->IsSRGBFormat ? GL_SRGB : GL_LINEAR;
+   return info->ColorSpace;
 }
 
 

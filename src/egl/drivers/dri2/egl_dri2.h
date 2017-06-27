@@ -321,7 +321,7 @@ struct dri2_egl_surface
 struct dri2_egl_config
 {
    _EGLConfig         base;
-   const __DRIconfig *dri_config[2][2];
+   const __DRIconfig *dri_config[2][5]; // FIXME: magic numbers
 };
 
 struct dri2_egl_image

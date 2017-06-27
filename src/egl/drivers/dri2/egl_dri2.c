@@ -158,14 +158,33 @@ static const EGLint dri2_to_egl_attribute_map[__DRI_ATTRIB_MAX] = {
    [__DRI_ATTRIB_YINVERTED]             = EGL_Y_INVERTED_NOK,
 };
 
+static size_t dri2_colorspace_index(EGLenum colorspace)
+{
+   switch (colorspace)
+   {
+      default:
+         assert(!"unsupported colorspace");
+      case EGL_GL_COLORSPACE_LINEAR_KHR:
+         return 0;
+      case EGL_GL_COLORSPACE_SRGB_KHR:
+         return 1;
+      case EGL_GL_COLORSPACE_SCRGB_LINEAR_EXT:
+         return 2;
+      case EGL_GL_COLORSPACE_DISPLAY_P3_LINEAR_EXT:
+         return 3;
+      case EGL_GL_COLORSPACE_DISPLAY_P3_EXT:
+         return 4;
+   }
+}
+
 const __DRIconfig *
 dri2_get_dri_config(struct dri2_egl_config *conf, EGLint surface_type,
                     EGLenum colorspace)
 {
    const bool double_buffer = surface_type == EGL_WINDOW_BIT;
-   const bool srgb = colorspace == EGL_GL_COLORSPACE_SRGB_KHR;
+   const size_t index = dri2_colorspace_index(colorspace);
 
-   return conf->dri_config[double_buffer][srgb];
+   return conf->dri_config[double_buffer][index];
 }
 
 static EGLBoolean

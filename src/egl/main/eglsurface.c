@@ -94,6 +94,9 @@ _eglParseSurfaceAttribList(_EGLSurface *surf, const EGLint *attrib_list)
          switch (val) {
          case EGL_GL_COLORSPACE_SRGB_KHR:
          case EGL_GL_COLORSPACE_LINEAR_KHR:
+         case EGL_GL_COLORSPACE_SCRGB_LINEAR_EXT:
+         case EGL_GL_COLORSPACE_DISPLAY_P3_LINEAR_EXT:
+         case EGL_GL_COLORSPACE_DISPLAY_P3_EXT:
             break;
          default:
             err = EGL_BAD_ATTRIBUTE;

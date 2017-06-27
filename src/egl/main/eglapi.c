@@ -487,6 +487,11 @@ _eglCreateExtensionsString(_EGLDisplay *dpy)
 
    _EGL_CHECK_EXTENSION(EXT_buffer_age);
    _EGL_CHECK_EXTENSION(EXT_create_context_robustness);
+   if (dpy->Extensions.KHR_gl_colorspace) {
+      _eglAppendExtension(&exts, "EGL_EXT_gl_colorspace_display_p3");
+      _eglAppendExtension(&exts, "EGL_EXT_gl_colorspace_display_p3_linear");
+      _eglAppendExtension(&exts, "EGL_EXT_gl_colorspace_scrgb_linear");
+   }
    _EGL_CHECK_EXTENSION(EXT_image_dma_buf_import);
    _EGL_CHECK_EXTENSION(EXT_image_dma_buf_import_modifiers);
    _EGL_CHECK_EXTENSION(EXT_swap_buffers_with_damage);
