@@ -1485,7 +1485,7 @@ class Notification {
   // Blocks until the controller thread notifies. Must be called from a test
   // thread.
   void WaitForNotification() {
-    for (;;) {
+    while (true) {
       pthread_mutex_lock(&mutex_);
       const bool notified = notified_;
       pthread_mutex_unlock(&mutex_);

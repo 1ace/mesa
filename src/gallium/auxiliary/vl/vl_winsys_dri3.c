@@ -199,7 +199,7 @@ dri3_find_back(struct vl_dri3_screen *scrn)
 {
    int b;
 
-   for (;;) {
+   while (true) {
       for (b = 0; b < BACK_BUFFER_NUM; b++) {
          int id = (b + scrn->cur_back) % BACK_BUFFER_NUM;
          struct vl_dri3_buffer *buffer = scrn->back_buffers[id];

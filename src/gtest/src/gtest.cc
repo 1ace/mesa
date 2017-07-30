@@ -479,7 +479,7 @@ bool UnitTestOptions::PatternMatchesString(const char *pattern,
 bool UnitTestOptions::MatchesFilter(
     const std::string& name, const char* filter) {
   const char *cur_pattern = filter;
-  for (;;) {
+  while (true) {
     if (PatternMatchesString(cur_pattern, name.c_str())) {
       return true;
     }
@@ -3589,7 +3589,7 @@ void XmlUnitTestResultPrinter::OutputXmlCDataSection(::std::ostream* stream,
                                                      const char* data) {
   const char* segment = data;
   *stream << "<![CDATA[";
-  for (;;) {
+  while (true) {
     const char* const next_segment = strstr(segment, "]]>");
     if (next_segment != NULL) {
       stream->write(
@@ -5129,7 +5129,7 @@ static void PrintColorEncoded(const char* str) {
   // sequences.  Then we print one segment at a time.  At the end of
   // each iteration, the str pointer advances to the beginning of the
   // next segment.
-  for (;;) {
+  while (true) {
     const char* p = strchr(str, '@');
     if (p == NULL) {
       ColoredPrintf(color, "%s", str);

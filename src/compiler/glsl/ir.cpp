@@ -869,7 +869,7 @@ ir_constant::ir_constant(const struct glsl_type *type, exec_list *value_list)
     * component of the constant being constructed.
     */
    unsigned i = 0;
-   for (;;) {
+   while (true) {
       assert(value->as_constant() != NULL);
       assert(!value->is_tail_sentinel());
 

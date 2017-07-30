@@ -139,7 +139,7 @@ graw_set_display_func(void (* draw)(void))
 void
 graw_main_loop(void)
 {
-   for (;;) {
+   while (true) {
       MSG msg;
 
       while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {

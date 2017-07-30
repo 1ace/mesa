@@ -585,7 +585,7 @@ sparse_dump(struct amdgpu_winsys_bo *bo, const char *func)
    uint32_t span_first_va_page = 0;
    uint32_t va_page = 0;
 
-   for (;;) {
+   while (true) {
       struct amdgpu_sparse_backing *backing = 0;
       uint32_t backing_page = 0;
 

@@ -514,7 +514,7 @@ dri3_find_back(struct loader_dri3_drawable *draw)
       draw->cur_blit_source = -1;
    }
 
-   for (;;) {
+   while (true) {
       for (b = 0; b < num_to_consider; b++) {
          int id = LOADER_DRI3_BACK_ID((b + draw->cur_back) % draw->num_back);
          struct loader_dri3_buffer *buffer = draw->buffers[id];

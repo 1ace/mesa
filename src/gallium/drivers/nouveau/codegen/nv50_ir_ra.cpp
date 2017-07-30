@@ -1306,7 +1306,7 @@ GCRA::simplifyNode(RIG_Node *node)
 bool
 GCRA::simplify()
 {
-   for (;;) {
+   while (true) {
       if (!DLLIST_EMPTY(&lo[0])) {
          do {
             simplifyNode(lo[0].next);

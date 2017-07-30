@@ -551,7 +551,7 @@ retry: /* we get here if we put code after the if inside a branch */
        * postcondition by lowering jumps in both then_instructions and
        * else_instructions.
        */
-      for(;;) {
+      while (true) {
          /* Determine the types of the jumps that terminate
           * ir->then_instructions and ir->else_instructions.
           */
