@@ -22,6 +22,7 @@
 
 #include <string.h>
 #include "adapter9.h"
+#include "util/macros.h"
 
 #define DBG_CHANNEL DBG_ADAPTER
 
@@ -275,7 +276,7 @@ void d3d_fill_cardname(D3DADAPTER_IDENTIFIER9* drvid) {
     unsigned i;
     switch (drvid->VendorId) {
     case HW_VENDOR_INTEL:
-        for (i = 0; i < sizeof(cards_intel) / sizeof(cards_intel[0]); i++) {
+        for (i = 0; i < ARRAY_SIZE(cards_intel); i++) {
             if (strstr(drvid->Description, cards_intel[i].mesaname)) {
                 strncpy(drvid->Description, cards_intel[i].d3d9name, sizeof(drvid->Description));
                 return;
@@ -286,7 +287,7 @@ void d3d_fill_cardname(D3DADAPTER_IDENTIFIER9* drvid) {
         strncpy(drvid->Description, cards_intel[0].d3d9name, sizeof(drvid->Description));
         break;
     case HW_VENDOR_VMWARE:
-        for (i = 0; i < sizeof(cards_vmware) / sizeof(cards_vmware[0]); i++) {
+        for (i = 0; i < ARRAY_SIZE(cards_vmware); i++) {
             if (strstr(drvid->Description, cards_vmware[i].mesaname)) {
                 strncpy(drvid->Description, cards_vmware[i].d3d9name, sizeof(drvid->Description));
                 return;
@@ -297,7 +298,7 @@ void d3d_fill_cardname(D3DADAPTER_IDENTIFIER9* drvid) {
         strncpy(drvid->Description, cards_vmware[0].d3d9name, sizeof(drvid->Description));
         break;
     case HW_VENDOR_AMD:
-        for (i = 0; i < sizeof(cards_amd) / sizeof(cards_amd[0]); i++) {
+        for (i = 0; i < ARRAY_SIZE(cards_amd); i++) {
             if (strstr(drvid->Description, cards_amd[i].mesaname)) {
                 strncpy(drvid->Description, cards_amd[i].d3d9name, sizeof(drvid->Description));
                 return;
@@ -308,7 +309,7 @@ void d3d_fill_cardname(D3DADAPTER_IDENTIFIER9* drvid) {
         strncpy(drvid->Description, cards_amd[0].d3d9name, sizeof(drvid->Description));
         break;
     case HW_VENDOR_NVIDIA:
-        for (i = 0; i < sizeof(cards_nvidia) / sizeof(cards_nvidia[0]); i++) {
+        for (i = 0; i < ARRAY_SIZE(cards_nvidia); i++) {
             if (strstr(drvid->Description, cards_nvidia[i].mesaname)) {
                 strncpy(drvid->Description, cards_nvidia[i].d3d9name, sizeof(drvid->Description));
                 return;

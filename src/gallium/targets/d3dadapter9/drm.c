@@ -37,6 +37,7 @@
 #include "d3dadapter/d3dadapter9.h"
 #include "d3dadapter/drm.h"
 
+#include "util/macros.h"
 #include "util/xmlconfig.h"
 #include "util/xmlpool.h"
 
@@ -155,7 +156,7 @@ read_descriptor( struct d3dadapter9_context *ctx,
     if (override_vendorid > 0) {
         found = FALSE;
         /* fill in device_id and card name for fake vendor */
-        for (i = 0; i < sizeof(fallback_cards)/sizeof(fallback_cards[0]); i++) {
+        for (i = 0; i < ARRAY_SIZE(fallback_cards); i++) {
             if (fallback_cards[i].vendor_id == override_vendorid) {
                 DBG("Faking card '%s' vendor 0x%04x, device 0x%04x\n",
                         fallback_cards[i].name,
