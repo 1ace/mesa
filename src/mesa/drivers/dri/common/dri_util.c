@@ -49,6 +49,7 @@
 #include "main/debug_output.h"
 #include "main/errors.h"
 #include "main/macros.h"
+#include "util/bitscan.h"
 
 const char __dri2ConfigOptions[] =
    DRI_CONF_BEGIN
@@ -325,7 +326,11 @@ driCreateContextAttribs(__DRIscreen *screen, int api,
 	mesa_api = API_OPENGLES;
 	break;
     case __DRI_API_GLES2:
+	ctx_config.major_version = 2;
+	mesa_api = API_OPENGLES2;
+	break;
     case __DRI_API_GLES3:
+	ctx_config.major_version = 3;
 	mesa_api = API_OPENGLES2;
 	break;
     case __DRI_API_OPENGL_CORE:
@@ -506,7 +511,14 @@ static __DRIcontext *
 driCreateNewContext(__DRIscreen *screen, const __DRIconfig *config,
                     __DRIcontext *shared, void *data)
 {
-    return driCreateNewContextForAPI(screen, __DRI_API_OPENGL,
+    int apifs;
+
+    apifs = ffs(screen->api_mask);
+
+    if (!apifs)
+        return NULL;
+
+    return driCreateNewContextForAPI(screen, apifs - 1,
                                      config, shared, data);
 }
 
