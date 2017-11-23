@@ -130,7 +130,7 @@ find_output(nir_shader *shader, unsigned drvloc)
             nir_ssa_def *new_def = find_output_in_block(block, drvloc);
             assert(!(new_def && def));
             def = new_def;
-#if !defined(DEBUG)
+#ifndef NDEBUG
             /* for debug builds, scan entire shader to assert
              * if output is written multiple times.  For release
              * builds just assume all is well and bail when we

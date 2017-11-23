@@ -1063,7 +1063,7 @@ validate_ir_tree(exec_list *instructions)
     * and it's half composed of assert()s anyway which wouldn't do
     * anything.
     */
-#ifdef DEBUG
+#ifndef NDEBUG
    ir_validate v;
 
    v.run(instructions);

@@ -76,6 +76,7 @@ F: src/egl/
 
 HAIKU
 R: Alexander von Gluck IV <kallisti5@unixzen.com>
+R: Jérôme Duval <jerome.duval@gmail.com>
 F: include/HaikuGL/
 F: src/egl/drivers/haiku/
 F: src/gallium/state_trackers/hgl/
