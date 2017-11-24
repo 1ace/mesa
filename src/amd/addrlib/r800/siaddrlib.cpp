@@ -1834,7 +1834,7 @@ UINT_64 SiLib::HwlGetSizeAdjustmentMicroTiled(
         physicalSliceSize =  logicalSliceSize * thickness;
     }
 
-#if !ALT_TEST
+#ifndef ALT_TEST
     //
     // Special workaround for depth/stencil buffer, use 8 bpp to align depth buffer again since
     // the stencil plane may have larger pitch if the slice size is smaller than base alignment.

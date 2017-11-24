@@ -244,7 +244,7 @@ BOOL_32 EgBasedLib::ComputeSurfaceInfoLinear(
 
     if ((pIn->tileMode == ADDR_TM_LINEAR_GENERAL) && pIn->flags.color && (pIn->height > 1))
     {
-#if !ALT_TEST
+#ifndef ALT_TEST
         // When linear_general surface is accessed in multiple lines, it requires 8 pixels in pitch
         // alignment since PITCH_TILE_MAX is in unit of 8 pixels.
         // It is OK if it is accessed per line.
@@ -3907,7 +3907,7 @@ ADDR_E_RETURNCODE EgBasedLib::HwlComputeSurfaceAddrFromCoord(
     ADDR_E_RETURNCODE retCode = ADDR_OK;
 
     if (
-#if !ALT_TEST // Overflow test needs this out-of-boundary coord
+#ifndef ALT_TEST // Overflow test needs this out-of-boundary coord
         (pIn->x > pIn->pitch)   ||
         (pIn->y > pIn->height)  ||
 #endif

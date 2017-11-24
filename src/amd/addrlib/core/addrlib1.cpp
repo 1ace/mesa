@@ -236,7 +236,7 @@ ADDR_E_RETURNCODE Lib::ComputeSurfaceInfo(
         pOut->last2DLevel = FALSE;
         pOut->tcCompatible = FALSE;
 
-#if !ALT_TEST
+#ifndef ALT_TEST
         if (localIn.numSamples > 1)
         {
             ADDR_ASSERT(localIn.mipLevel == 0);
