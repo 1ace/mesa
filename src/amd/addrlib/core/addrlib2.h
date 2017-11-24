@@ -701,7 +701,7 @@ protected:
 
     VOID VerifyMipLevelInfo(const ADDR2_COMPUTE_SURFACE_INFO_INPUT* pIn) const
     {
-#if DEBUG
+#ifndef NDEBUG
         if (pIn->numMipLevels > 1)
         {
             UINT_32 actualMipLevels = 1;

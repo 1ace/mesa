@@ -367,12 +367,12 @@ ADDR_E_RETURNCODE Lib::ComputeSurfaceInfo(
             pOut->pixelPitch    = pOut->pitch;
             pOut->pixelHeight   = pOut->height;
 
-#if DEBUG
+#ifndef NDEBUG
             if (localIn.flags.display)
             {
                 ADDR_ASSERT((pOut->pitchAlign % 32) == 0);
             }
-#endif //DEBUG
+#endif //NDEBUG
 
             if (localIn.format != ADDR_FMT_INVALID)
             {
@@ -2046,12 +2046,12 @@ ADDR_E_RETURNCODE Lib::ComputeCmaskInfo(
     UINT_32 slice = (*pPitchOut) * (*pHeightOut);
     UINT_32 blockMax = slice / 128 / 128 - 1;
 
-#if DEBUG
+#ifndef NDEBUG
     if (slice % (64*256) != 0)
     {
         ADDR_ASSERT_ALWAYS();
     }
-#endif //DEBUG
+#endif //NDEBUG
 
     UINT_32 maxBlockMax = HwlGetMaxCmaskBlockMax();
 

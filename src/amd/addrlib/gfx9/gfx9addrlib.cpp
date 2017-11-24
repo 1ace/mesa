@@ -196,7 +196,7 @@ ADDR_E_RETURNCODE Gfx9Lib::HwlComputeHtileInfo(
     metaBlkDim.w <<= widthAmp;
     metaBlkDim.h <<= heightAmp;
 
-#if DEBUG
+#ifndef NDEBUG
     Dim3d metaBlkDimDbg = {8, 8, 1};
     for (UINT_32 index = 0; index < numCompressBlkPerMetaBlkLog2; index++)
     {
@@ -314,7 +314,7 @@ ADDR_E_RETURNCODE Gfx9Lib::HwlComputeCmaskInfo(
     metaBlkDim.w <<= widthAmp;
     metaBlkDim.h <<= heightAmp;
 
-#if DEBUG
+#ifndef NDEBUG
     Dim2d metaBlkDimDbg = {8, 8};
     for (UINT_32 index = 0; index < numCompressBlkPerMetaBlkLog2; index++)
     {

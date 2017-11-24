@@ -1219,7 +1219,7 @@ VOID ElemLib::AdjustSurfaceInfo(
                     basePitch = basePitch / expandX;
                     width     = width  / expandX;
                     height    = height / expandY;
-#if DEBUG
+#ifndef NDEBUG
                     width     = (width == 0) ? 1 : width;
                     height    = (height == 0) ? 1 : height;
 

@@ -3863,7 +3863,7 @@ ADDR_E_RETURNCODE EgBasedLib::HwlComputeSurfaceInfo(
         // Resets pTileInfo to NULL if the internal tile info is used
         if (pOut->pTileInfo == &tileInfo)
         {
-#if DEBUG
+#ifndef NDEBUG
             // Client does not pass in a valid pTileInfo
             if (IsMacroTiled(pOut->tileMode))
             {
