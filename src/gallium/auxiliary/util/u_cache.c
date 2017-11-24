@@ -56,7 +56,7 @@ struct util_cache_entry
    void *key;
    void *value;
    
-#ifdef DEBUG
+#ifndef NDEBUG
    unsigned count;
 #endif
 };
@@ -214,7 +214,7 @@ util_cache_set(struct util_cache *cache,
 
    util_cache_entry_destroy(cache, entry);
    
-#ifdef DEBUG
+#ifndef NDEBUG
    ++entry->count;
 #endif
    
@@ -289,7 +289,7 @@ util_cache_destroy(struct util_cache *cache)
    if (!cache)
       return;
 
-#ifdef DEBUG
+#ifndef NDEBUG
    if (cache->count >= 20*cache->size) {
       /* Normal approximation of the Poisson distribution */
       double mean = (double)cache->count/(double)cache->size;
@@ -341,7 +341,7 @@ util_cache_remove(struct util_cache *cache,
 static void
 ensure_sanity(const struct util_cache *cache)
 {
-#ifdef DEBUG
+#ifndef NDEBUG
    unsigned i, cnt = 0;
 
    assert(cache);
