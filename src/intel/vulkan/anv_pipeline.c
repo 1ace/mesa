@@ -1221,7 +1221,7 @@ copy_non_dynamic_state(struct anv_pipeline *pipeline,
 static void
 anv_pipeline_validate_create_info(const VkGraphicsPipelineCreateInfo *info)
 {
-#ifdef DEBUG
+#ifndef NDEBUG
    struct anv_render_pass *renderpass = NULL;
    struct anv_subpass *subpass = NULL;
 
