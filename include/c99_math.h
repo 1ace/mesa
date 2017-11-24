@@ -45,7 +45,7 @@
 
 
 #if !defined(_MSC_VER) && \
-    __STDC_VERSION__ < 199901L && \
+    defined(__STDC_VERSION__) &&  __STDC_VERSION__ < 199901L && \
     (!defined(_XOPEN_SOURCE) || _XOPEN_SOURCE < 600) && \
     !defined(__cplusplus)
 
@@ -190,7 +190,8 @@ fpclassify(double x)
  * undefines those functions, which in glibc 2.23, are defined as macros rather
  * than functions as in glibc 2.22.
  */
-#if __cplusplus >= 201103L && (__GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 23))
+#if defined(__cplusplus) && __cplusplus >= 201103L && \
+    defined(__GLIBC__) && (__GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 23))
 #include <cmath>
 
 using std::fpclassify;

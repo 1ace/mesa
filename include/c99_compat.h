@@ -81,7 +81,7 @@
      /* Intel compiler supports inline keyword */
 #  elif defined(__WATCOMC__) && (__WATCOMC__ >= 1100)
 #    define inline __inline
-#  elif (__STDC_VERSION__ >= 199901L)
+#  elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
      /* C99 supports inline keyword */
 #  else
 #    define inline
@@ -96,7 +96,7 @@
  * - http://cellperformance.beyond3d.com/articles/2006/05/demystifying-the-restrict-keyword.html
  */
 #ifndef restrict
-#  if (__STDC_VERSION__ >= 199901L)
+#  if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
      /* C99 */
 #  elif defined(__GNUC__)
 #    define restrict __restrict__
@@ -112,7 +112,7 @@
  * C99 __func__ macro
  */
 #ifndef __func__
-#  if (__STDC_VERSION__ >= 199901L)
+#  if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L)
      /* C99 */
 #  elif defined(__GNUC__)
 #    define __func__ __FUNCTION__
