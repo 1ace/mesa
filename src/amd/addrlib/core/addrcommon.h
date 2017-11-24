@@ -51,7 +51,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifdef DEBUG
     #if defined(__GNUC__)
-        #define ADDR_DBG_BREAK()    assert(false)
+        #define ADDR_DBG_BREAK()    assert(false) /* FIXME: this can't work on debug builds with asserts off */
     #elif defined(__APPLE__)
         #define ADDR_DBG_BREAK()    { IOPanic("");}
     #else
