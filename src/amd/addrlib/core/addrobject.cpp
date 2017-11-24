@@ -213,7 +213,7 @@ VOID Object::DebugPrint(
     ...
     ) const
 {
-#if DEBUG
+#ifdef DEBUG
     if (m_client.callbacks.debugPrint != NULL)
     {
         ADDR_DEBUGPRINT_INPUT debugPrintInput = {0};
