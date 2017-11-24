@@ -143,8 +143,6 @@
 
 #define ADDR_PRNT(a)
 
-#define ADDR_DBG_BREAK()
-
 #define ADDR_INFO(cond, a)
 
 #define ADDR_WARN(cond, a)
