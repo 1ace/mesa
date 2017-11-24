@@ -242,7 +242,7 @@ void radv_loge_v(const char *format, va_list va);
 	} while (0)
 
 /* A non-fatal assert.  Useful for debugging. */
-#ifdef DEBUG
+#ifndef NDEBUG
 #define radv_assert(x) ({						\
 			if (unlikely(!(x)))				\
 				fprintf(stderr, "%s:%d ASSERT: %s\n", __FILE__, __LINE__, #x); \
