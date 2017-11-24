@@ -393,7 +393,7 @@ void anv_loge_v(const char *format, va_list va);
    } while (0)
 
 /* A non-fatal assert.  Useful for debugging. */
-#ifdef DEBUG
+#ifndef NDEBUG
 #define anv_assert(x) ({ \
    if (unlikely(!(x))) \
       intel_loge("%s:%d ASSERT: %s", __FILE__, __LINE__, #x); \
