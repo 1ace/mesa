@@ -145,7 +145,7 @@ _mesa_parse_arb_fragment_program(struct gl_context* ctx, GLenum target,
       _mesa_append_fog_code(ctx, program, fog_modes[state.option.Fog], GL_TRUE);
    }
 
-#if DEBUG_FP
+#ifdef DEBUG_FP
    printf("____________Fragment program %u ________\n", program->Id);
    _mesa_print_program(&program->Base);
 #endif
@@ -212,7 +212,7 @@ _mesa_parse_arb_vertex_program(struct gl_context *ctx, GLenum target,
       _mesa_free_parameter_list(program->Parameters);
    program->Parameters = prog.Parameters;
 
-#if DEBUG_VP
+#ifdef DEBUG_VP
    printf("____________Vertex program %u __________\n", program->Id);
    _mesa_print_program(program);
 #endif
