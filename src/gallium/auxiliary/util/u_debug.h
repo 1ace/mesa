@@ -188,7 +188,7 @@ void _debug_assert_fail(const char *expr,
 #ifndef NDEBUG
 #define debug_assert(expr) ((expr) ? (void)0 : _debug_assert_fail(#expr, __FILE__, __LINE__, __FUNCTION__))
 #else
-#define debug_assert(expr) (void)(0 && (expr))
+#define debug_assert(expr) ((void)0)
 #endif
 
 
