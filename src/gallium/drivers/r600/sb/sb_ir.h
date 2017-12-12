@@ -993,7 +993,7 @@ public:
 class cf_node : public container_node {
 protected:
 	cf_node() : container_node(NT_OP, NST_CF_INST), jump_target(),
-		jump_after_target() { memset(&bc, 0, sizeof(bc_cf)); };
+		jump_after_target() { bc = {}; };
 public:
 	bc_cf bc;
 
@@ -1012,7 +1012,7 @@ public:
 
 class alu_node : public node {
 protected:
-	alu_node() : node(NT_OP, NST_ALU_INST) { memset(&bc, 0, sizeof(bc_alu)); };
+	alu_node() : node(NT_OP, NST_ALU_INST) { bc = {}; };
 public:
 	bc_alu bc;
 
@@ -1058,7 +1058,7 @@ public:
 
 class fetch_node : public node {
 protected:
-	fetch_node() : node(NT_OP, NST_FETCH_INST) { memset(&bc, 0, sizeof(bc_fetch)); };
+	fetch_node() : node(NT_OP, NST_FETCH_INST) { bc = {}; };
 public:
 	bc_fetch bc;
 

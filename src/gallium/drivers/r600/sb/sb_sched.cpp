@@ -1943,7 +1943,7 @@ void post_scheduler::release_src_vec(vvec& vv, bool src) {
 }
 
 void literal_tracker::reset() {
-	memset(lt, 0, sizeof(lt));
+	*lt = literal();
 	memset(uc, 0, sizeof(uc));
 }
 
