@@ -389,5 +389,71 @@ Khronos extensions that are not part of any Vulkan version:
   VK_KHR_xlib_surface                                   DONE (anv, radv)
 
 
+EGL 1.4 (1.5 on some DRI2 platform/driver combinations)
+
+EGL extensions don't depend only on the driver, but also (and mostly) on
+the platform. Supported platforms are: Android, DRM/GBM, Surfaceless,
+Wayland, and X11, which supports different extensions when talking to
+a DRI2 or DRI3 xorg server. Haiku doesn't support any EGL extensions at
+the moment.
+
+  EGL_ANDROID_framebuffer_target                        DONE (Android)
+  EGL_ANDROID_image_native_buffer                       DONE (Android)
+  EGL_ANDROID_native_fence_sync                         DONE (Android on i965)
+  EGL_ANDROID_recordable                                DONE (Android)
+  EGL_CHROMIUM_sync_control                             DONE (X11)
+  EGL_EXT_buffer_age                                    DONE (DRM on (i915, i965, nouveau, radeon), Wayland, X11/DRI3)
+  EGL_EXT_create_context_robustness                     DONE (i965, r600, radeonsi)
+  EGL_EXT_image_dma_buf_import                          DONE (i965)
+  EGL_EXT_image_dma_buf_import_modifiers                DONE (i965)
+  EGL_EXT_pixel_format_float                            DONE
+  EGL_EXT_swap_buffers_with_damage                      DONE (Wayland)
+  EGL_IMG_context_priority                              DONE (i965, freedreno)
+  EGL_KHR_cl_event2                                     DONE (gallium drivers)*
+  EGL_KHR_config_attribs                                DONE
+  EGL_KHR_context_flush_control                         DONE (i965)
+  EGL_KHR_create_context                                DONE (X11, i915, i965, nouveau, radeon, swrast)
+  EGL_KHR_create_context_no_error                       DONE (i965, i965, nouveau, radeon, swrast)
+  EGL_KHR_fence_sync                                    DONE (gallium drivers)*
+  EGL_KHR_get_all_proc_addresses                        DONE
+  EGL_KHR_gl_colorspace                                 DONE (i965, nouveau, swr)
+  EGL_KHR_gl_renderbuffer_image                         DONE
+  EGL_KHR_gl_texture_2D_image                           DONE (i915, i965)
+  EGL_KHR_gl_texture_3D_image                           DONE (i915, i965)
+  EGL_KHR_gl_texture_cubemap_image                      DONE (i915, i965)
+  EGL_KHR_image                                         DONE (Android)
+  EGL_KHR_image_base                                    DONE
+  EGL_KHR_image_pixmap                                  DONE (DRM, X11)
+  EGL_KHR_no_config_context                             DONE
+  EGL_KHR_partial_update                                DONE (Android)
+  EGL_KHR_reusable_sync                                 DONE
+  EGL_KHR_surfaceless_context                           DONE
+  EGL_KHR_wait_sync                                     DONE (gallium drivers)*
+  EGL_MESA_drm_image                                    DONE *
+  EGL_MESA_image_dma_buf_export                         DONE *
+  EGL_NOK_swap_region                                   DONE (X11/DRI2)
+  EGL_NOK_texture_from_pixmap                           DONE (X11)
+  EGL_NV_post_sub_buffer                                DONE (X11/DRI2)
+  EGL_WL_bind_wayland_display                           DONE (DRM, Wayland, X11)*
+  EGL_WL_create_wayland_buffer_from_image               DONE (Wayland)
+
+* = only hardware drivers
+
+EGL 1.5 is supported when the following extensions are supported:
+- EGL_EXT_create_context_robustness
+- EGL_KHR_cl_event2
+- EGL_KHR_create_context
+- EGL_KHR_fence_sync
+- EGL_KHR_get_all_proc_addresses
+- EGL_KHR_gl_colorspace
+- EGL_KHR_gl_renderbuffer_image
+- EGL_KHR_gl_texture_2D_image
+- EGL_KHR_gl_texture_3D_image
+- EGL_KHR_gl_texture_cubemap_image
+- EGL_KHR_image_base
+- EGL_KHR_surfaceless_context
+- EGL_KHR_wait_sync
+
+
 A graphical representation of this information can be found at
 https://mesamatrix.net/
