@@ -23,6 +23,7 @@
 <li><a href="#testing">Testing Patches</a>
 <li><a href="#mailing">Mailing Patches</a>
 <li><a href="#reviewing">Reviewing Patches</a>
+<li><a href="#pushing">Pushing Patches</a>
 <li><a href="#nominations">Nominating a commit for a stable branch</a>
 <li><a href="#criteria">Criteria for accepting patches to the stable branch</a>
 <li><a href="#backports">Sending backports for the stable branch</a>
@@ -227,6 +228,31 @@ If small changes are suggested, it's OK to say something like:
 <p>
 which tells the patch author that the patch can be committed, as long
 as the issues are resolved first.
+</p>
+
+
+<h2 id="pushing">Pushing patches</h2>
+
+<p>
+Patches should remain available for review for a certain period,
+depending on the severity of what they change.
+Patches that fix serious regressions (fails to build, most of piglit/CTS
+fails, etc.) are likely to be pushed on a shorter notice.
+</p>
+
+<p>
+Reviewed patches are pushed to the <a href="repository.html">upstream repository</a>
+by developers with <a href="repository.html#developer">commit access</a>.
+If you do not have access, clearly state so (normally after the
+<code>---</code> line) as part of the patch submission, and a reviewer
+will push it for you.
+</p>
+
+<p>
+If you notice your patch hasn't been pushed after having been reviewed,
+don't hesitate to poke developers (preferably by replying to the review
+email). Emails do fall through the cracks sometimes, nothing personal
+about it :)
 </p>
 
 
