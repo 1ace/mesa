@@ -127,18 +127,20 @@ def write_format_table(formats):
     for format in formats:
         print 'static const struct vk_format_description'
         print 'vk_format_%s_description = {' % (format.short_name(),)
-        print "   %s," % (format.name,)
-        print "   \"%s\"," % (format.name,)
-        print "   \"%s\"," % (format.short_name(),)
-        print "   {%u, %u, %u},\t/* block */" % (format.block_width, format.block_height, format.block_size())
-        print "   %s," % (layout_map(format.layout),)
-        print "   %u,\t/* nr_channels */" % (format.nr_channels(),)
-        print "   %s,\t/* is_array */" % (bool_map(format.is_array()),)
-        print "   %s,\t/* is_bitmask */" % (bool_map(format.is_bitmask()),)
-        print "   %s,\t/* is_mixed */" % (bool_map(format.is_mixed()),)
+        print "   .format = %s," % (format.name,)
+        print "   .name = \"%s\"," % (format.name,)
+        print "   .short_name = \"%s\"," % (format.short_name(),)
+        print "   .block = {%u, %u, %u}," % (format.block_width, format.block_height, format.block_size())
+        print "   .layout = %s," % (layout_map(format.layout),)
+        print "   .nr_channels = %u," % (format.nr_channels(),)
+        print "   .is_array = %s," % (bool_map(format.is_array()),)
+        print "   .is_bitmask = %s," % (bool_map(format.is_bitmask()),)
+        print "   .is_mixed = %s," % (bool_map(format.is_mixed()),)
+        print "   .channel = "
         print_channels(format, do_channel_array)
+        print "   .swizzle = "
         print_channels(format, do_swizzle_array)
-        print "   %s," % (colorspace_map(format.colorspace),)
+        print "   .colorspace = %s," % (colorspace_map(format.colorspace),)
         print "};"
         print
         
