@@ -125,77 +125,79 @@ def write_format_table(formats):
     for format in formats:
         print 'const struct util_format_description'
         print 'util_format_%s_description = {' % (format.short_name(),)
-        print "   %s," % (format.name,)
-        print "   \"%s\"," % (format.name,)
-        print "   \"%s\"," % (format.short_name(),)
-        print "   {%u, %u, %u},\t/* block */" % (format.block_width, format.block_height, format.block_size())
-        print "   %s," % (layout_map(format.layout),)
-        print "   %u,\t/* nr_channels */" % (format.nr_channels(),)
-        print "   %s,\t/* is_array */" % (bool_map(format.is_array()),)
-        print "   %s,\t/* is_bitmask */" % (bool_map(format.is_bitmask()),)
-        print "   %s,\t/* is_mixed */" % (bool_map(format.is_mixed()),)
+        print "   .format = %s," % (format.name,)
+        print "   .name = \"%s\"," % (format.name,)
+        print "   .short_name = \"%s\"," % (format.short_name(),)
+        print "   .block = {%u, %u, %u}," % (format.block_width, format.block_height, format.block_size())
+        print "   .layout = %s," % (layout_map(format.layout),)
+        print "   .nr_channels = %u," % (format.nr_channels(),)
+        print "   .is_array = %s," % (bool_map(format.is_array()),)
+        print "   .is_bitmask = %s," % (bool_map(format.is_bitmask()),)
+        print "   .is_mixed = %s," % (bool_map(format.is_mixed()),)
+        print "   .channel = "
         u_format_pack.print_channels(format, do_channel_array)
+        print "   .swizzle = "
         u_format_pack.print_channels(format, do_swizzle_array)
-        print "   %s," % (colorspace_map(format.colorspace),)
+        print "   .colorspace = %s," % (colorspace_map(format.colorspace),)
         access = True
         if format.layout in ('bptc', 'astc'):
             access = False
         if format.layout == 'etc' and format.short_name() != 'etc1_rgb8':
             access = False
         if format.colorspace != ZS and not format.is_pure_color() and access:
-            print "   &util_format_%s_unpack_rgba_8unorm," % format.short_name() 
-            print "   &util_format_%s_pack_rgba_8unorm," % format.short_name() 
+            print "   .unpack_rgba_8unorm = &util_format_%s_unpack_rgba_8unorm," % format.short_name()
+            print "   .pack_rgba_8unorm = &util_format_%s_pack_rgba_8unorm," % format.short_name()
             if format.layout == 's3tc' or format.layout == 'rgtc':
-                print "   &util_format_%s_fetch_rgba_8unorm," % format.short_name()
+                print "   .fetch_rgba_8unorm = &util_format_%s_fetch_rgba_8unorm," % format.short_name()
             else:
-                print "   NULL, /* fetch_rgba_8unorm */" 
-            print "   &util_format_%s_unpack_rgba_float," % format.short_name() 
-            print "   &util_format_%s_pack_rgba_float," % format.short_name() 
-            print "   &util_format_%s_fetch_rgba_float," % format.short_name()
+                print "   .fetch_rgba_8unorm = NULL,"
+            print "   .unpack_rgba_float = &util_format_%s_unpack_rgba_float," % format.short_name()
+            print "   .pack_rgba_float = &util_format_%s_pack_rgba_float," % format.short_name()
+            print "   .fetch_rgba_float = &util_format_%s_fetch_rgba_float," % format.short_name()
         else:
-            print "   NULL, /* unpack_rgba_8unorm */" 
-            print "   NULL, /* pack_rgba_8unorm */" 
-            print "   NULL, /* fetch_rgba_8unorm */" 
-            print "   NULL, /* unpack_rgba_float */" 
-            print "   NULL, /* pack_rgba_float */" 
-            print "   NULL, /* fetch_rgba_float */" 
+            print "   .unpack_rgba_8unorm = NULL,"
+            print "   .pack_rgba_8unorm = NULL,"
+            print "   .fetch_rgba_8unorm = NULL,"
+            print "   .unpack_rgba_float = NULL,"
+            print "   .pack_rgba_float = NULL,"
+            print "   .fetch_rgba_float = NULL,"
         if format.has_depth():
-            print "   &util_format_%s_unpack_z_32unorm," % format.short_name() 
-            print "   &util_format_%s_pack_z_32unorm," % format.short_name() 
-            print "   &util_format_%s_unpack_z_float," % format.short_name() 
-            print "   &util_format_%s_pack_z_float," % format.short_name() 
+            print "   .unpack_z_32unorm = &util_format_%s_unpack_z_32unorm," % format.short_name()
+            print "   .pack_z_32unorm = &util_format_%s_pack_z_32unorm," % format.short_name()
+            print "   .unpack_z_float = &util_format_%s_unpack_z_float," % format.short_name()
+            print "   .pack_z_float = &util_format_%s_pack_z_float," % format.short_name()
         else:
-            print "   NULL, /* unpack_z_32unorm */" 
-            print "   NULL, /* pack_z_32unorm */" 
-            print "   NULL, /* unpack_z_float */" 
-            print "   NULL, /* pack_z_float */" 
+            print "   .unpack_z_32unorm = NULL,"
+            print "   .pack_z_32unorm = NULL,"
+            print "   .unpack_z_float = NULL,"
+            print "   .pack_z_float = NULL,"
         if format.has_stencil():
-            print "   &util_format_%s_unpack_s_8uint," % format.short_name() 
-            print "   &util_format_%s_pack_s_8uint," % format.short_name() 
+            print "   .unpack_s_8uint = &util_format_%s_unpack_s_8uint," % format.short_name()
+            print "   .pack_s_8uint = &util_format_%s_pack_s_8uint," % format.short_name()
         else:
-            print "   NULL, /* unpack_s_8uint */" 
-            print "   NULL, /* pack_s_8uint */"
+            print "   .unpack_s_8uint = NULL,"
+            print "   .pack_s_8uint = NULL,"
         if format.is_pure_unsigned():
-            print "   &util_format_%s_unpack_unsigned, /* unpack_rgba_uint */" % format.short_name() 
-            print "   &util_format_%s_pack_unsigned, /* pack_rgba_uint */" % format.short_name()
-            print "   &util_format_%s_unpack_signed, /* unpack_rgba_sint */" % format.short_name()
-            print "   &util_format_%s_pack_signed,  /* pack_rgba_sint */" % format.short_name()
-            print "   &util_format_%s_fetch_unsigned,  /* fetch_rgba_uint */" % format.short_name()
-            print "   NULL  /* fetch_rgba_sint */"
+            print "   .unpack_rgba_uint = &util_format_%s_unpack_unsigned," % format.short_name()
+            print "   .pack_rgba_uint = &util_format_%s_pack_unsigned," % format.short_name()
+            print "   .unpack_rgba_sint = &util_format_%s_unpack_signed," % format.short_name()
+            print "   .pack_rgba_sint = &util_format_%s_pack_signed," % format.short_name()
+            print "   .fetch_rgba_uint = &util_format_%s_fetch_unsigned," % format.short_name()
+            print "   .fetch_rgba_sint = NULL,"
         elif format.is_pure_signed():
-            print "   &util_format_%s_unpack_unsigned, /* unpack_rgba_uint */" % format.short_name()
-            print "   &util_format_%s_pack_unsigned, /* pack_rgba_uint */" % format.short_name()
-            print "   &util_format_%s_unpack_signed, /* unpack_rgba_sint */" % format.short_name()
-            print "   &util_format_%s_pack_signed,  /* pack_rgba_sint */" % format.short_name()
-            print "   NULL,  /* fetch_rgba_uint */"
-            print "   &util_format_%s_fetch_signed  /* fetch_rgba_sint */" % format.short_name()
+            print "   .unpack_rgba_uint = &util_format_%s_unpack_unsigned," % format.short_name()
+            print "   .pack_rgba_uint = &util_format_%s_pack_unsigned," % format.short_name()
+            print "   .unpack_rgba_sint = &util_format_%s_unpack_signed," % format.short_name()
+            print "   .pack_rgba_sint = &util_format_%s_pack_signed," % format.short_name()
+            print "   .fetch_rgba_uint = NULL,"
+            print "   .fetch_rgba_sint = &util_format_%s_fetch_signed," % format.short_name()
         else:
-            print "   NULL, /* unpack_rgba_uint */" 
-            print "   NULL, /* pack_rgba_uint */" 
-            print "   NULL, /* unpack_rgba_sint */" 
-            print "   NULL, /* pack_rgba_sint */"
-            print "   NULL, /* fetch_rgba_uint */"
-            print "   NULL  /* fetch_rgba_sint */"
+            print "   .unpack_rgba_uint = NULL,"
+            print "   .pack_rgba_uint = NULL,"
+            print "   .unpack_rgba_sint = NULL,"
+            print "   .pack_rgba_sint = NULL,"
+            print "   .fetch_rgba_uint = NULL,"
+            print "   .fetch_rgba_sint = NULL,"
         print "};"
         print
         
