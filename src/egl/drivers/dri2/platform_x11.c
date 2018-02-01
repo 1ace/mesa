@@ -1239,7 +1239,7 @@ dri2_initialize_x11_swrast(_EGLDriver *drv, _EGLDisplay *disp)
     * here will allow is to simply free the memory at dri2_terminate().
     */
    dri2_dpy->driver_name = strdup("swrast");
-   if (!dri2_load_driver_swrast(disp))
+   if (!dri2_load_driver(disp, SWRAST))
       goto cleanup;
 
    dri2_dpy->loader_extensions = swrast_loader_extensions;
@@ -1315,7 +1315,7 @@ dri2_initialize_x11_dri3(_EGLDriver *drv, _EGLDisplay *disp)
    if (!dri3_x11_connect(dri2_dpy))
       goto cleanup;
 
-   if (!dri2_load_driver_dri3(disp))
+   if (!dri2_load_driver(disp, DRI3))
       goto cleanup;
 
    dri2_dpy->loader_extensions = dri3_image_loader_extensions;
@@ -1413,7 +1413,7 @@ dri2_initialize_x11_dri2(_EGLDriver *drv, _EGLDisplay *disp)
    if (!dri2_x11_connect(dri2_dpy))
       goto cleanup;
 
-   if (!dri2_load_driver(disp))
+   if (!dri2_load_driver(disp, DRI2))
       goto cleanup;
 
    if (dri2_dpy->dri2_minor >= 1)

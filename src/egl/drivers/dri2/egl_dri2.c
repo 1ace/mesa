@@ -579,54 +579,30 @@ dri2_open_driver(_EGLDisplay *disp)
 }
 
 EGLBoolean
-dri2_load_driver_dri3(_EGLDisplay *disp)
+dri2_load_driver(_EGLDisplay *disp, enum dri2_driver_extension ext)
 {
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    const __DRIextension **extensions;
+   const struct dri2_extension_match *matches;
 
    extensions = dri2_open_driver(disp);
    if (!extensions)
       return EGL_FALSE;
 
-   if (!dri2_bind_extensions(dri2_dpy, dri3_driver_extensions, extensions, false)) {
-      dlclose(dri2_dpy->driver);
-      return EGL_FALSE;
+   switch (ext)
+   {
+      case DRI2:
+         matches = dri2_driver_extensions;
+         break;
+      case DRI3:
+         matches = dri3_driver_extensions;
+         break;
+      case SWRAST:
+         matches = swrast_driver_extensions;
+         break;
    }
-   dri2_dpy->driver_extensions = extensions;
 
-   return EGL_TRUE;
-}
-
-EGLBoolean
-dri2_load_driver(_EGLDisplay *disp)
-{
-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
-   const __DRIextension **extensions;
-
-   extensions = dri2_open_driver(disp);
-   if (!extensions)
-      return EGL_FALSE;
-
-   if (!dri2_bind_extensions(dri2_dpy, dri2_driver_extensions, extensions, false)) {
-      dlclose(dri2_dpy->driver);
-      return EGL_FALSE;
-   }
-   dri2_dpy->driver_extensions = extensions;
-
-   return EGL_TRUE;
-}
-
-EGLBoolean
-dri2_load_driver_swrast(_EGLDisplay *disp)
-{
-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
-   const __DRIextension **extensions;
-
-   extensions = dri2_open_driver(disp);
-   if (!extensions)
-      return EGL_FALSE;
-
-   if (!dri2_bind_extensions(dri2_dpy, swrast_driver_extensions, extensions, false)) {
+   if (!dri2_bind_extensions(dri2_dpy, matches, extensions, false)) {
       dlclose(dri2_dpy->driver);
       return EGL_FALSE;
    }

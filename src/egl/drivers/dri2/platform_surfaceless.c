@@ -296,7 +296,7 @@ surfaceless_probe_device(_EGLDisplay *dpy, bool swrast)
       }
 
       dri2_dpy->fd = fd;
-      if (dri2_load_driver_dri3(dpy))
+      if (dri2_load_driver(dpy, DRI3))
          return true;
 
       close(fd);

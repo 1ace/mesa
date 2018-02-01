@@ -1288,167 +1288,6 @@ dri2_wl_add_configs_for_visuals(_EGLDriver *drv, _EGLDisplay *disp)
    return (count != 0);
 }
 
-static EGLBoolean
-dri2_initialize_wayland_drm(_EGLDriver *drv, _EGLDisplay *disp)
-{
-   struct dri2_egl_display *dri2_dpy;
-
-   loader_set_logger(_eglLog);
-
-   dri2_dpy = calloc(1, sizeof *dri2_dpy);
-   if (!dri2_dpy)
-      return _eglError(EGL_BAD_ALLOC, "eglInitialize");
-
-   dri2_dpy->fd = -1;
-   disp->DriverData = (void *) dri2_dpy;
-   if (disp->PlatformDisplay == NULL) {
-      dri2_dpy->wl_dpy = wl_display_connect(NULL);
-      if (dri2_dpy->wl_dpy == NULL)
-         goto cleanup;
-      dri2_dpy->own_device = true;
-   } else {
-      dri2_dpy->wl_dpy = disp->PlatformDisplay;
-   }
-
-   dri2_dpy->wl_modifiers =
-      calloc(ARRAY_SIZE(dri2_wl_visuals), sizeof(*dri2_dpy->wl_modifiers));
-   if (!dri2_dpy->wl_modifiers)
-      goto cleanup;
-   for (int i = 0; i < ARRAY_SIZE(dri2_wl_visuals); i++) {
-      if (!u_vector_init(&dri2_dpy->wl_modifiers[i], sizeof(uint64_t), 32))
-         goto cleanup;
-   }
-
-   dri2_dpy->wl_queue = wl_display_create_queue(dri2_dpy->wl_dpy);
-
-   dri2_dpy->wl_dpy_wrapper = wl_proxy_create_wrapper(dri2_dpy->wl_dpy);
-   if (dri2_dpy->wl_dpy_wrapper == NULL)
-      goto cleanup;
-
-   wl_proxy_set_queue((struct wl_proxy *) dri2_dpy->wl_dpy_wrapper,
-                      dri2_dpy->wl_queue);
-
-   if (dri2_dpy->own_device)
-      wl_display_dispatch_pending(dri2_dpy->wl_dpy);
-
-   dri2_dpy->wl_registry = wl_display_get_registry(dri2_dpy->wl_dpy_wrapper);
-   wl_registry_add_listener(dri2_dpy->wl_registry,
-                            &registry_listener_drm, dri2_dpy);
-   if (roundtrip(dri2_dpy) < 0 || dri2_dpy->wl_drm == NULL)
-      goto cleanup;
-
-   if (roundtrip(dri2_dpy) < 0 || dri2_dpy->fd == -1)
-      goto cleanup;
-
-   if (roundtrip(dri2_dpy) < 0 || !dri2_dpy->authenticated)
-      goto cleanup;
-
-   dri2_dpy->fd = loader_get_user_preferred_fd(dri2_dpy->fd,
-                                               &dri2_dpy->is_different_gpu);
-   if (dri2_dpy->is_different_gpu) {
-      free(dri2_dpy->device_name);
-      dri2_dpy->device_name = loader_get_device_name_for_fd(dri2_dpy->fd);
-      if (!dri2_dpy->device_name) {
-         _eglError(EGL_BAD_ALLOC, "wayland-egl: failed to get device name "
-                                  "for requested GPU");
-         goto cleanup;
-      }
-   }
-
-   /* we have to do the check now, because loader_get_user_preferred_fd
-    * will return a render-node when the requested gpu is different
-    * to the server, but also if the client asks for the same gpu than
-    * the server by requesting its pci-id */
-   dri2_dpy->is_render_node = drmGetNodeTypeFromFd(dri2_dpy->fd) == DRM_NODE_RENDER;
-
-   dri2_dpy->driver_name = loader_get_driver_for_fd(dri2_dpy->fd);
-   if (dri2_dpy->driver_name == NULL) {
-      _eglError(EGL_BAD_ALLOC, "DRI2: failed to get driver name");
-      goto cleanup;
-   }
-
-   /* render nodes cannot use Gem names, and thus do not support
-    * the __DRI_DRI2_LOADER extension */
-   if (!dri2_dpy->is_render_node) {
-      dri2_dpy->loader_extensions = dri2_loader_extensions;
-      if (!dri2_load_driver(disp)) {
-         _eglError(EGL_BAD_ALLOC, "DRI2: failed to load driver");
-         goto cleanup;
-      }
-   } else {
-      dri2_dpy->loader_extensions = image_loader_extensions;
-      if (!dri2_load_driver_dri3(disp)) {
-         _eglError(EGL_BAD_ALLOC, "DRI3: failed to load driver");
-         goto cleanup;
-      }
-   }
-
-   if (!dri2_create_screen(disp))
-      goto cleanup;
-
-   if (!dri2_setup_extensions(disp))
-      goto cleanup;
-
-   dri2_setup_screen(disp);
-
-   dri2_wl_setup_swap_interval(disp);
-
-   /* To use Prime, we must have _DRI_IMAGE v7 at least.
-    * createImageFromFds support indicates that Prime export/import
-    * is supported by the driver. Fall back to
-    * gem names if we don't have Prime support. */
-
-   if (dri2_dpy->image->base.version < 7 ||
-       dri2_dpy->image->createImageFromFds == NULL)
-      dri2_dpy->capabilities &= ~WL_DRM_CAPABILITY_PRIME;
-
-   /* We cannot use Gem names with render-nodes, only prime fds (dma-buf).
-    * The server needs to accept them */
-   if (dri2_dpy->is_render_node &&
-       !(dri2_dpy->capabilities & WL_DRM_CAPABILITY_PRIME)) {
-      _eglLog(_EGL_WARNING, "wayland-egl: display is not render-node capable");
-      goto cleanup;
-   }
-
-   if (dri2_dpy->is_different_gpu &&
-       (dri2_dpy->image->base.version < 9 ||
-        dri2_dpy->image->blitImage == NULL)) {
-      _eglLog(_EGL_WARNING, "wayland-egl: Different GPU selected, but the "
-                            "Image extension in the driver is not "
-                            "compatible. Version 9 or later and blitImage() "
-                            "are required");
-      goto cleanup;
-   }
-
-   if (!dri2_wl_add_configs_for_visuals(drv, disp)) {
-      _eglError(EGL_NOT_INITIALIZED, "DRI2: failed to add configs");
-      goto cleanup;
-   }
-
-   dri2_set_WL_bind_wayland_display(drv, disp);
-   /* When cannot convert EGLImage to wl_buffer when on a different gpu,
-    * because the buffer of the EGLImage has likely a tiling mode the server
-    * gpu won't support. These is no way to check for now. Thus do not support the
-    * extension */
-   if (!dri2_dpy->is_different_gpu)
-      disp->Extensions.WL_create_wayland_buffer_from_image = EGL_TRUE;
-
-   disp->Extensions.EXT_buffer_age = EGL_TRUE;
-
-   disp->Extensions.EXT_swap_buffers_with_damage = EGL_TRUE;
-
-   /* Fill vtbl last to prevent accidentally calling virtual function during
-    * initialization.
-    */
-   dri2_dpy->vtbl = &dri2_wl_display_vtbl;
-
-   return EGL_TRUE;
-
- cleanup:
-   dri2_display_destroy(disp);
-   return EGL_FALSE;
-}
-
 static int
 dri2_wl_swrast_get_stride_for_format(int format, int w)
 {
@@ -1943,7 +1782,7 @@ static const __DRIextension *swrast_loader_extensions[] = {
 };
 
 static EGLBoolean
-dri2_initialize_wayland_swrast(_EGLDriver *drv, _EGLDisplay *disp)
+dri2_initialize_wayland_internal(_EGLDriver *drv, _EGLDisplay *disp, bool swrast)
 {
    struct dri2_egl_display *dri2_dpy;
 
@@ -1964,6 +1803,18 @@ dri2_initialize_wayland_swrast(_EGLDriver *drv, _EGLDisplay *disp)
       dri2_dpy->wl_dpy = disp->PlatformDisplay;
    }
 
+   if (!swrast)
+   {
+   dri2_dpy->wl_modifiers =
+      calloc(ARRAY_SIZE(dri2_wl_visuals), sizeof(*dri2_dpy->wl_modifiers));
+   if (!dri2_dpy->wl_modifiers)
+      goto cleanup;
+   for (int i = 0; i < ARRAY_SIZE(dri2_wl_visuals); i++) {
+      if (!u_vector_init(&dri2_dpy->wl_modifiers[i], sizeof(uint64_t), 32))
+         goto cleanup;
+   }
+   }
+
    dri2_dpy->wl_queue = wl_display_create_queue(dri2_dpy->wl_dpy);
 
    dri2_dpy->wl_dpy_wrapper = wl_proxy_create_wrapper(dri2_dpy->wl_dpy);
@@ -1977,20 +1828,83 @@ dri2_initialize_wayland_swrast(_EGLDriver *drv, _EGLDisplay *disp)
       wl_display_dispatch_pending(dri2_dpy->wl_dpy);
 
    dri2_dpy->wl_registry = wl_display_get_registry(dri2_dpy->wl_dpy_wrapper);
-   wl_registry_add_listener(dri2_dpy->wl_registry,
-                            &registry_listener_swrast, dri2_dpy);
+   const struct wl_registry_listener *listener;
+   if (swrast)
+      listener = &registry_listener_swrast;
+   else
+      listener = &registry_listener_drm;
+   wl_registry_add_listener(dri2_dpy->wl_registry, listener, dri2_dpy);
 
+   if (swrast)
+   {
    if (roundtrip(dri2_dpy) < 0 || dri2_dpy->wl_shm == NULL)
       goto cleanup;
 
    if (roundtrip(dri2_dpy) < 0 || dri2_dpy->formats == 0)
       goto cleanup;
-
-   dri2_dpy->driver_name = strdup("swrast");
-   if (!dri2_load_driver_swrast(disp))
+   }
+   else
+   {
+   if (roundtrip(dri2_dpy) < 0 || dri2_dpy->wl_drm == NULL)
       goto cleanup;
 
-   dri2_dpy->loader_extensions = swrast_loader_extensions;
+   if (roundtrip(dri2_dpy) < 0 || dri2_dpy->fd == -1)
+      goto cleanup;
+
+   if (roundtrip(dri2_dpy) < 0 || !dri2_dpy->authenticated)
+      goto cleanup;
+
+   dri2_dpy->fd = loader_get_user_preferred_fd(dri2_dpy->fd,
+                                               &dri2_dpy->is_different_gpu);
+   if (dri2_dpy->is_different_gpu) {
+      free(dri2_dpy->device_name);
+      dri2_dpy->device_name = loader_get_device_name_for_fd(dri2_dpy->fd);
+      if (!dri2_dpy->device_name) {
+         _eglError(EGL_BAD_ALLOC, "wayland-egl: failed to get device name "
+                                  "for requested GPU");
+         goto cleanup;
+      }
+   }
+
+   /* we have to do the check now, because loader_get_user_preferred_fd
+    * will return a render-node when the requested gpu is different
+    * to the server, but also if the client asks for the same gpu than
+    * the server by requesting its pci-id */
+   dri2_dpy->is_render_node = drmGetNodeTypeFromFd(dri2_dpy->fd) == DRM_NODE_RENDER;
+   }
+
+   if (swrast)
+   dri2_dpy->driver_name = strdup("swrast");
+   else
+   dri2_dpy->driver_name = loader_get_driver_for_fd(dri2_dpy->fd);
+
+   if (dri2_dpy->driver_name == NULL) {
+      _eglError(EGL_BAD_ALLOC, "DRI2: failed to get driver name");
+      goto cleanup;
+   }
+
+   if (swrast) {
+      if (!dri2_load_driver(disp, SWRAST))
+         goto cleanup;
+
+      dri2_dpy->loader_extensions = swrast_loader_extensions;
+   } else
+
+   /* render nodes cannot use Gem names, and thus do not support
+    * the __DRI_DRI2_LOADER extension */
+   if (!dri2_dpy->is_render_node) {
+      dri2_dpy->loader_extensions = dri2_loader_extensions;
+      if (!dri2_load_driver(disp, DRI2)) {
+         _eglError(EGL_BAD_ALLOC, "DRI2: failed to load driver");
+         goto cleanup;
+      }
+   } else {
+      dri2_dpy->loader_extensions = image_loader_extensions;
+      if (!dri2_load_driver(disp, DRI3)) {
+         _eglError(EGL_BAD_ALLOC, "DRI3: failed to load driver");
+         goto cleanup;
+      }
+   }
 
    if (!dri2_create_screen(disp))
       goto cleanup;
@@ -2002,15 +1916,63 @@ dri2_initialize_wayland_swrast(_EGLDriver *drv, _EGLDisplay *disp)
 
    dri2_wl_setup_swap_interval(disp);
 
+   if (!swrast)
+   {
+   /* To use Prime, we must have _DRI_IMAGE v7 at least.
+    * createImageFromFds support indicates that Prime export/import
+    * is supported by the driver. Fall back to
+    * gem names if we don't have Prime support. */
+
+   if (dri2_dpy->image->base.version < 7 ||
+       dri2_dpy->image->createImageFromFds == NULL)
+      dri2_dpy->capabilities &= ~WL_DRM_CAPABILITY_PRIME;
+
+   /* We cannot use Gem names with render-nodes, only prime fds (dma-buf).
+    * The server needs to accept them */
+   if (dri2_dpy->is_render_node &&
+       !(dri2_dpy->capabilities & WL_DRM_CAPABILITY_PRIME)) {
+      _eglLog(_EGL_WARNING, "wayland-egl: display is not render-node capable");
+      goto cleanup;
+   }
+
+   if (dri2_dpy->is_different_gpu &&
+       (dri2_dpy->image->base.version < 9 ||
+        dri2_dpy->image->blitImage == NULL)) {
+      _eglLog(_EGL_WARNING, "wayland-egl: Different GPU selected, but the "
+                            "Image extension in the driver is not "
+                            "compatible. Version 9 or later and blitImage() "
+                            "are required");
+      goto cleanup;
+   }
+   }
+
    if (!dri2_wl_add_configs_for_visuals(drv, disp)) {
       _eglError(EGL_NOT_INITIALIZED, "DRI2: failed to add configs");
       goto cleanup;
    }
 
+   if (!swrast)
+   {
+   dri2_set_WL_bind_wayland_display(drv, disp);
+   /* When cannot convert EGLImage to wl_buffer when on a different gpu,
+    * because the buffer of the EGLImage has likely a tiling mode the server
+    * gpu won't support. These is no way to check for now. Thus do not support the
+    * extension */
+   if (!dri2_dpy->is_different_gpu)
+      disp->Extensions.WL_create_wayland_buffer_from_image = EGL_TRUE;
+
+   disp->Extensions.EXT_buffer_age = EGL_TRUE;
+
+   disp->Extensions.EXT_swap_buffers_with_damage = EGL_TRUE;
+   }
+
    /* Fill vtbl last to prevent accidentally calling virtual function during
     * initialization.
     */
+   if (swrast)
    dri2_dpy->vtbl = &dri2_wl_swrast_display_vtbl;
+   else
+   dri2_dpy->vtbl = &dri2_wl_display_vtbl;
 
    return EGL_TRUE;
 
@@ -2025,10 +1987,10 @@ dri2_initialize_wayland(_EGLDriver *drv, _EGLDisplay *disp)
    EGLBoolean initialized = EGL_FALSE;
 
    if (!disp->Options.ForceSoftware)
-      initialized = dri2_initialize_wayland_drm(drv, disp);
+      initialized = dri2_initialize_wayland_internal(drv, disp, false);
 
    if (!initialized)
-      initialized = dri2_initialize_wayland_swrast(drv, disp);
+      initialized = dri2_initialize_wayland_internal(drv, disp, true);
 
    return initialized;
 

@@ -1232,13 +1232,13 @@ dri2_initialize_android(_EGLDriver *drv, _EGLDisplay *disp)
     * the __DRI_DRI2_LOADER extension */
    if (!dri2_dpy->is_render_node) {
       dri2_dpy->loader_extensions = droid_dri2_loader_extensions;
-      if (!dri2_load_driver(disp)) {
+      if (!dri2_load_driver(disp, DRI2)) {
          err = "DRI2: failed to load driver";
          goto cleanup;
       }
    } else {
       dri2_dpy->loader_extensions = droid_image_loader_extensions;
-      if (!dri2_load_driver_dri3(disp)) {
+      if (!dri2_load_driver(disp, DRI3)) {
          err = "DRI3: failed to load driver";
          goto cleanup;
       }
