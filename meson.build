@@ -426,9 +426,6 @@ if with_gallium_vdpau
   dep_vdpau = declare_dependency(
     compile_args : run_command(prog_pkgconfig, ['vdpau', '--cflags']).stdout().split()
   )
-endif
-
-if with_gallium_vdpau
   pre_args += '-DHAVE_ST_VDPAU'
 endif
 vdpau_drivers_path = get_option('vdpau-libs-path')
