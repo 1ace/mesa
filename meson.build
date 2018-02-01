@@ -418,10 +418,8 @@ elif not (with_gallium_r300 or with_gallium_r600 or with_gallium_radeonsi or
   else
     _vdpau = 'false'
   endif
-elif _vdpau == 'auto'
-  _vdpau = 'true'
 endif
-with_gallium_vdpau = _vdpau == 'true'
+with_gallium_vdpau = _vdpau != 'false'
 dep_vdpau = []
 if with_gallium_vdpau
   dep_vdpau = dependency('vdpau', version : '>= 1.1')
