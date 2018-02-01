@@ -520,15 +520,9 @@ else
   with_gallium_omx = _omx
 endif
 
-pre_args += [
-  '-DENABLE_ST_OMX_BELLAGIO=' + (with_gallium_omx == 'bellagio' ? '1' : '0'),
-  '-DENABLE_ST_OMX_TIZONIA=' + (with_gallium_omx == 'tizonia' ? '1' : '0'),
-]
-
-
-omx_drivers_path = get_option('omx-libs-path')
 
 if with_gallium_omx != 'disabled'
+  omx_drivers_path = get_option('omx-libs-path')
   # Figure out where to put the omx driver.
   # FIXME: this could all be vastly simplified by adding a 'defined_variable'
   # argument to meson's get_pkgconfig_variable method.
