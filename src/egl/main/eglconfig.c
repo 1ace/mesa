@@ -506,8 +506,6 @@ _eglIsConfigAttribValid(_EGLConfig *conf, EGLint attr)
       return conf->Display->Extensions.ANDROID_framebuffer_target;
    case EGL_RECORDABLE_ANDROID:
       return conf->Display->Extensions.ANDROID_recordable;
-   default:
-      break;
    }
 
    return EGL_TRUE;
