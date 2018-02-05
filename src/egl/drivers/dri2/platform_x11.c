@@ -734,7 +734,7 @@ dri2_x11_add_configs_for_visuals(struct dri2_egl_display *dri2_dpy,
 {
    xcb_depth_iterator_t d;
    xcb_visualtype_t *visuals;
-   int config_count = 0;
+   EGLint config_count = 0;
    EGLint surface_type;
 
    d = xcb_screen_allowed_depths_iterator(dri2_dpy->screen);

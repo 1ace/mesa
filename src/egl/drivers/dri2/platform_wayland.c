@@ -1259,7 +1259,7 @@ dri2_wl_add_configs_for_visuals(_EGLDriver *drv, _EGLDisplay *disp)
 {
    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
    unsigned int format_count[ARRAY_SIZE(dri2_wl_visuals)] = { 0 };
-   unsigned int count = 0;
+   EGLint count = 0;
 
    for (unsigned i = 0; dri2_dpy->driver_configs[i]; i++) {
       for (unsigned j = 0; j < ARRAY_SIZE(dri2_wl_visuals); j++) {

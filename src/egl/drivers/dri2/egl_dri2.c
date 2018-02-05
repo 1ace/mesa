@@ -205,7 +205,7 @@ dri2_match_config(const _EGLConfig *conf, const _EGLConfig *criteria)
 }
 
 struct dri2_egl_config *
-dri2_add_config(_EGLDisplay *disp, const __DRIconfig *dri_config, int id,
+dri2_add_config(_EGLDisplay *disp, const __DRIconfig *dri_config, EGLint id,
                 EGLint surface_type, const EGLint *attr_list,
                 const unsigned int *rgba_masks)
 {

@@ -1060,7 +1060,7 @@ droid_add_configs_for_visuals(_EGLDriver *drv, _EGLDisplay *dpy)
    };
 
    unsigned int format_count[ARRAY_SIZE(visuals)] = { 0 };
-   int config_count = 0;
+   EGLint config_count = 0;
 
    /* The nesting of loops is significant here. Also significant is the order
     * of the HAL pixel formats. Many Android apps (such as Google's official

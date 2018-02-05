@@ -619,7 +619,7 @@ drm_add_configs_for_visuals(_EGLDriver *drv, _EGLDisplay *disp)
    const struct gbm_dri_visual *visuals = dri2_dpy->gbm_dri->visual_table;
    int num_visuals = dri2_dpy->gbm_dri->num_visuals;
    unsigned int format_count[num_visuals];
-   unsigned int config_count = 0;
+   EGLint config_count = 0;
 
    memset(format_count, 0, num_visuals * sizeof(unsigned int));
 
