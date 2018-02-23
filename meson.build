@@ -98,26 +98,26 @@ with_dri_r100 = false
 with_dri_r200 = false
 with_dri_nouveau = false
 with_dri_swrast = false
-_drivers = get_option('dri-drivers')
-if _drivers == 'auto'
+dri_driver_list = get_option('dri-drivers')
+if dri_driver_list == 'auto'
   if system_has_kms_drm
     # TODO: PPC, Sparc
     if ['x86', 'x86_64'].contains(host_machine.cpu_family())
-      _drivers = 'i915,i965,r100,r200,nouveau'
+      dri_driver_list = 'i915,i965,r100,r200,nouveau'
     elif ['arm', 'aarch64'].contains(host_machine.cpu_family())
-      _drivers = ''
+      dri_driver_list = ''
     else
       error('Unknown architecture. Please pass -Ddri-drivers to set driver options. Patches gladly accepted to fix this.')
     endif
   elif ['darwin', 'windows', 'cygwin', 'haiku'].contains(host_machine.system())
     # only swrast would make sense here, but gallium swrast is a much better default
-    _drivers = ''
+    dri_driver_list = ''
   else
     error('Unknown OS. Please pass -Ddri-drivers to set driver options. Patches gladly accepted to fix this.')
   endif
 endif
-if _drivers != ''
-  _split = _drivers.split(',')
+if dri_driver_list != ''
+  _split = dri_driver_list.split(',')
   with_dri_i915 = _split.contains('i915')
   with_dri_i965 = _split.contains('i965')
   with_dri_r100 = _split.contains('r100')
@@ -144,25 +144,25 @@ with_gallium_i915 = false
 with_gallium_svga = false
 with_gallium_virgl = false
 with_gallium_swr = false
-_drivers = get_option('gallium-drivers')
-if _drivers == 'auto'
+gallium_driver_list = get_option('gallium-drivers')
+if gallium_driver_list == 'auto'
   if system_has_kms_drm
     # TODO: PPC, Sparc
     if ['x86', 'x86_64'].contains(host_machine.cpu_family())
-      _drivers = 'r300,r600,radeonsi,nouveau,virgl,svga,swrast'
+      gallium_driver_list = 'r300,r600,radeonsi,nouveau,virgl,svga,swrast'
     elif ['arm', 'aarch64'].contains(host_machine.cpu_family())
-      _drivers = 'pl111,vc4,vc5,freedreno,etnaviv,imx,nouveau,tegra,virgl,swrast'
+      gallium_driver_list = 'pl111,vc4,vc5,freedreno,etnaviv,imx,nouveau,tegra,virgl,swrast'
     else
       error('Unknown architecture. Please pass -Dgallium-drivers to set driver options. Patches gladly accepted to fix this.')
     endif
   elif ['darwin', 'windows', 'cygwin', 'haiku'].contains(host_machine.system())
-    _drivers = 'swrast'
+    gallium_driver_list = 'swrast'
   else
     error('Unknown OS. Please pass -Dgallium-drivers to set driver options. Patches gladly accepted to fix this.')
   endif
 endif
-if _drivers != ''
-  _split = _drivers.split(',')
+if gallium_driver_list != ''
+  _split = gallium_driver_list.split(',')
   with_gallium_pl111 = _split.contains('pl111')
   with_gallium_radeonsi = _split.contains('radeonsi')
   with_gallium_r300 = _split.contains('r300')
