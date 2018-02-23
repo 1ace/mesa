@@ -1103,6 +1103,7 @@ else
   with_llvm = false
 endif
 if with_llvm
+  llvm_config = find_program('llvm-config')
   _llvm_version = dep_llvm.version().split('.')
   # Development versions of LLVM have an 'svn' or 'git' suffix, we don't want
   # that for our version checks.
@@ -1278,10 +1279,12 @@ if get_option('gallium-extra-hud')
 endif
 
 _sensors = get_option('lmsensors')
+with_lmsensors = false
 if _sensors != 'false'
   dep_lmsensors = cc.find_library('libsensors', required : _sensors == 'true')
   if dep_lmsensors.found()
     pre_args += '-DHAVE_LIBSENSORS=1'
+    with_lmsensors = true
   endif
 else
   dep_lmsensors = []
@@ -1345,3 +1348,129 @@ env_test.set('NM', find_program('nm').path())
 subdir('include')
 subdir('bin')
 subdir('src')
+
+#
+# Output some configuration info for the user
+#
+message('')
+message('        prefix:          ' + get_option('prefix'))
+message('        libdir:          ' + join_paths(get_option('prefix'), get_option('libdir')))
+message('        includedir:      ' + join_paths(get_option('prefix'), get_option('includedir')))
+
+# API info
+message('')
+message('        OpenGL:          @0@ (ES1: @1@ ES2: @2@)'.format(with_opengl, with_gles1, with_gles2))
+
+# Driver info
+message('')
+if with_osmesa == 'none'
+  message('        OSMesa:          no')
+elif with_osmesa == 'classic'
+  message('        OSMesa:          lib@0@'.format(osmesa_lib_name))
+elif with_osmesa == 'gallium'
+  message('        OSMesa:          lib@0@ (Gallium)'.format(osmesa_lib_name))
+endif
+
+message('')
+if with_dri
+  message('        DRI platform:    ' + with_dri_platform)
+  message('        DRI drivers:     ' + dri_driver_list)
+  message('        DRI driver dir:  ' + join_paths(get_option('prefix'), dri_drivers_path))
+endif
+
+if with_glx == 'dri'
+    message('        GLX:             DRI-based')
+elif with_glx == 'xlib'
+    message('        GLX:             Xlib-based')
+elif with_glx == 'gallium-xlib'
+    message('        GLX:             Xlib-based (Gallium)')
+else
+    message('        GLX:             @0@'.format(with_glx))
+endif
+
+# EGL
+message('')
+message('        EGL:             @0@'.format(with_egl))
+if with_egl
+  egl_drivers_string = ''
+  if with_dri
+    egl_drivers_string += ' dri2'
+  endif
+  if with_dri3
+    egl_drivers_string += ' dri3'
+  endif
+  message('        EGL drivers:    ' + egl_drivers_string)
+endif
+message('        GBM:             @0@'.format(with_gbm))
+
+message('        EGL/Vulkan/VL platforms:   @0@'.format(_platforms))
+
+# Vulkan
+message('')
+if with_any_vk
+  message('        Vulkan drivers:  ' + _vulkan_drivers)
+  message('        Vulkan ICD dir:  ' + join_paths(get_option('prefix'), with_vulkan_icd_dir))
+else
+  message('        Vulkan drivers:  no')
+endif
+
+message('')
+if with_llvm
+  message('        llvm:            yes')
+  message('        llvm-config:     ' + llvm_config.path())
+  message('        llvm-version:    ' + '.'.join(_llvm_version))
+else
+  message('        llvm:            no')
+endif
+
+message('')
+if with_gallium
+  message('        Gallium drivers: ' + gallium_driver_list)
+  message('        Gallium st:      ' + ','.join(with_st))
+else
+  message('        Gallium:         no')
+endif
+
+message('')
+message('        HUD extra stats: @0@'.format(get_option('gallium-extra-hud')))
+message('        HUD lmsensors:   @0@'.format(with_lmsensors))
+
+if with_gallium_swr
+  message('')
+  if false # TODO: with_swr_builtin
+    message('        SWR archs:       @0@ (builtin)'.format(get_option('swr-arches')))
+  else
+    message('        SWR archs:       @0@'.format(get_option('swr-arches')))
+  endif
+endif
+
+# Libraries
+message('')
+#message('        Shared libs:     @0@'.format(with_shared)) #TODO
+#message('        Static libs:     @0@'.format(with_static)) #TODO
+message('        Shared-glapi:    @0@'.format(with_shared_glapi))
+
+# Compiler options
+message('')
+message('        CFLAGS:          ' + ' '.join(c_args))
+message('        CXXFLAGS:        ' + ' '.join(cpp_args))
+message('')
+
+if with_llvm and false #TODO
+  message('        LLVM_CFLAGS:     $LLVM_CFLAGS')
+  message('        LLVM_CXXFLAGS:   $LLVM_CXXFLAGS')
+  message('        LLVM_CPPFLAGS:   $LLVM_CPPFLAGS')
+  message('        LLVM_LDFLAGS:    $LLVM_LDFLAGS')
+  message('')
+endif
+
+message('        PYTHON2:         @0@'.format(prog_python2.path()))
+
+message('')
+if meson.backend() == 'ninja'
+  message('        Run `ninja` to build Mesa')
+else
+  message('        You can now build Mesa using @0@'.format(meson.backend()))
+endif
+
+message('')

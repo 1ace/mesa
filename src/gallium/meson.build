@@ -22,6 +22,8 @@
 inc_gallium_drivers = include_directories('drivers')
 inc_gallium_winsys = include_directories('winsys')
 
+with_st = []
+
 subdir('auxiliary')
 subdir('auxiliary/pipe-loader')
 subdir('drivers/ddebug')
@@ -153,47 +155,58 @@ if with_gallium_opencl
     error('OpenCL requires meson 0.44.0 or greater.')
   endif
   subdir('state_trackers/clover')
+  with_st += 'clover'
   subdir('targets/opencl')
 endif
 if with_dri
   subdir('state_trackers/dri')
+  with_st += 'dri'
   subdir('targets/dri')
 endif
 if with_osmesa == 'gallium'
   subdir('state_trackers/osmesa')
+  with_st += 'osmesa'
   subdir('targets/osmesa')
 endif
 if with_glx == 'gallium-xlib'
   subdir('winsys/sw/xlib')
   subdir('state_trackers/glx/xlib')
+  with_st += 'glx/xlib'
   subdir('targets/libgl-xlib')
 endif
 if with_gallium_vdpau
   subdir('state_trackers/vdpau')
+  with_st += 'vdpau'
   subdir('targets/vdpau')
 endif
 if with_gallium_xvmc
   subdir('state_trackers/xvmc')
+  with_st += 'xvmc'
   subdir('targets/xvmc')
 endif
 if with_gallium_omx != 'disabled'
   subdir('state_trackers/omx')
+  with_st += 'omx_' + with_gallium_omx
   subdir('targets/omx')
 endif
 if with_gallium_va
   subdir('state_trackers/va')
+  with_st += 'va'
   subdir('targets/va')
 endif
 if with_gallium_xa
   subdir('state_trackers/xa')
+  with_st += 'xa'
   subdir('targets/xa')
 endif
 if with_platform_haiku
   subdir('state_trackers/hgl')
+  with_st += 'hgl'
   subdir('targets/haiku-softpipe')
 endif
 if with_gallium_st_nine
   subdir('state_trackers/nine')
+  with_st += 'nine'
   subdir('targets/d3dadapter9')
 endif
 # TODO: tests
