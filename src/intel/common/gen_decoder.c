@@ -603,14 +603,16 @@ gen_spec_load_from_path(const struct gen_device_info *devinfo,
                         const char *path)
 {
    struct parser_context ctx;
-   size_t len, filename_len = strlen(path) + 20;
-   char *filename = malloc(filename_len);
+   size_t len;
+   char *filename;
    void *buf;
    FILE *input;
 
-   len = snprintf(filename, filename_len, "%s/gen%i.xml",
-                  path, devinfo_to_gen(devinfo));
-   assert(len < filename_len);
+   len = asprintf(&filename, "%s/gen%i.xml", path, devinfo_to_gen(devinfo));
+   if (!filename || len == -1) {
+      fprintf(stderr, "failed to allocate filename\n");
+      return NULL;
+   }
 
    input = fopen(filename, "r");
    if (input == NULL) {
