@@ -427,14 +427,11 @@ svga_host_log(const char *log)
    if (!log)
       return ret;
 
-   msg_len = strlen(log) + strlen("log ") + 1;
-   msg = CALLOC(1, msg_len);
-   if (msg == NULL) {
+   msg_len = util_asprintf(&msg, "log %s", log);
+   if (msg == NULL || msg_len == -1) {
       debug_printf("Cannot allocate memory for log message\n");
       return PIPE_ERROR_OUT_OF_MEMORY;
    }
-
-   util_sprintf(msg, "log %s", log);
 
    if (svga_open_channel(&channel, RPCI_PROTOCOL_NUM) ||
        svga_send_msg(&channel, msg) ||
