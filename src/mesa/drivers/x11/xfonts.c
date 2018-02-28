@@ -67,7 +67,7 @@ dump_font_struct(XFontStruct * font)
 #if 0
    for (c = font->min_char_or_byte2; c <= font->max_char_or_byte2; c++) {
       char prefix[8];
-      sprintf(prefix, "%d> ", c);
+      snprintf(prefix, sizeof prefix, "%d> ", c);
       dump_char_struct(&font->per_char[c], prefix);
    }
 #endif
@@ -311,7 +311,7 @@ Fake_glXUseXFont(Font font, int first, int count, int listbase)
 #ifdef DEBUG
       if (debug_xfonts) {
 	 char s[7];
-	 sprintf(s, isprint(c) ? "%c> " : "\\%03o> ", c);
+	 snprintf(s, sizeof s, isprint(c) ? "%c> " : "\\%03o> ", c);
 	 dump_char_struct(ch, s);
       }
 #endif
