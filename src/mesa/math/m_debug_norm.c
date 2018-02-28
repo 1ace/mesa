@@ -361,7 +361,7 @@ void _math_test_all_normal_transform_functions( char *description )
 
       if ( test_norm_function( func, mtype, cycles ) == 0 ) {
 	 char buf[100];
-	 sprintf( buf, "_mesa_normal_tab[0][%s] failed test (%s)",
+	 snprintf(buf, sizeof buf, "_mesa_normal_tab[0][%s] failed test (%s)",
 		  norm_strings[mtype], description );
 	 _mesa_problem( NULL, "%s", buf );
       }

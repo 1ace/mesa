@@ -385,7 +385,7 @@ void _math_test_all_cliptest_functions( char *description )
 
 	 if ( test_cliptest_function( func, np, psize, cycles ) == 0 ) {
 	    char buf[100];
-	    sprintf( buf, "%s[%d] failed test (%s)",
+	    snprintf(buf, sizeof buf, "%s[%d] failed test (%s)",
 		     cnames[np], psize, description );
 	    _mesa_problem( NULL, "%s", buf );
 	 }

@@ -315,7 +315,7 @@ void _math_test_all_transform_functions( char *description )
 
 	 if ( test_transform_function( func, psize, mtype, cycles ) == 0 ) {
 	    char buf[100];
-	    sprintf(buf, "_mesa_transform_tab[0][%d][%s] failed test (%s)",
+	    snprintf(buf, sizeof buf, "_mesa_transform_tab[0][%d][%s] failed test (%s)",
 		    psize, mstrings[mtype], description );
 	    _mesa_problem( NULL, "%s", buf );
 	 }
