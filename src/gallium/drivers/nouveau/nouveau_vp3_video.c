@@ -234,45 +234,40 @@ nouveau_vp3_decoder_init_common(struct pipe_video_codec *dec)
    dec->end_frame = nouveau_vp3_decoder_end_frame;
 }
 
-static void vp3_getpath(enum pipe_video_profile profile, char *path)
+static const char *
+vp3_getpath(enum pipe_video_profile profile)
 {
    switch (u_reduce_video_profile(profile)) {
       case PIPE_VIDEO_FORMAT_MPEG12: {
-         sprintf(path, "/lib/firmware/nouveau/vuc-vp3-mpeg12-0");
-         break;
+         return "/lib/firmware/nouveau/vuc-vp3-mpeg12-0";
       }
       case PIPE_VIDEO_FORMAT_VC1: {
-         sprintf(path, "/lib/firmware/nouveau/vuc-vp3-vc1-0");
-         break;
+         return "/lib/firmware/nouveau/vuc-vp3-vc1-0";
       }
       case PIPE_VIDEO_FORMAT_MPEG4_AVC: {
-         sprintf(path, "/lib/firmware/nouveau/vuc-vp3-h264-0");
-         break;
+         return "/lib/firmware/nouveau/vuc-vp3-h264-0";
       }
-      default: assert(0);
+      default: assert(0); return "";
    }
 }
 
-static void vp4_getpath(enum pipe_video_profile profile, char *path)
+static const char *
+vp4_getpath(enum pipe_video_profile profile)
 {
    switch (u_reduce_video_profile(profile)) {
       case PIPE_VIDEO_FORMAT_MPEG12: {
-         sprintf(path, "/lib/firmware/nouveau/vuc-mpeg12-0");
-         break;
+         return "/lib/firmware/nouveau/vuc-mpeg12-0";
       }
       case PIPE_VIDEO_FORMAT_MPEG4: {
-         sprintf(path, "/lib/firmware/nouveau/vuc-mpeg4-0");
-         break;
+         return "/lib/firmware/nouveau/vuc-mpeg4-0";
       }
       case PIPE_VIDEO_FORMAT_VC1: {
-         sprintf(path, "/lib/firmware/nouveau/vuc-vc1-0");
-         break;
+         return "/lib/firmware/nouveau/vuc-vc1-0";
       }
       case PIPE_VIDEO_FORMAT_MPEG4_AVC: {
-         sprintf(path, "/lib/firmware/nouveau/vuc-h264-0");
-         break;
+         return "/lib/firmware/nouveau/vuc-h264-0";
       }
-      default: assert(0);
+      default: assert(0); return "";
    }
 }
 
@@ -282,14 +277,14 @@ nouveau_vp3_load_firmware(struct nouveau_vp3_decoder *dec,
                           unsigned chipset)
 {
    int fd;
-   char path[PATH_MAX];
+   const char *path;
    ssize_t r;
    uint32_t *end, endval;
 
    if (chipset >= 0xa3 && chipset != 0xaa && chipset != 0xac)
-      vp4_getpath(profile, path);
+      path = vp4_getpath(profile);
    else
-      vp3_getpath(profile, path);
+      path = vp3_getpath(profile);
 
    if (nouveau_bo_map(dec->fw_bo, NOUVEAU_BO_WR, dec->client))
       return 1;
@@ -416,12 +411,12 @@ firmware_present(struct pipe_screen *pscreen, enum pipe_video_profile profile)
 
    /* For vp3/vp4 chipsets, make sure that the relevant firmware is present */
    if (!vp5 && !(screen->firmware_info.profiles_checked & (1 << profile))) {
-      char path[PATH_MAX];
+      const char *path;
       struct stat s;
       if (vp3)
-         vp3_getpath(profile, path);
+         path = vp3_getpath(profile);
       else
-         vp4_getpath(profile, path);
+         path = vp4_getpath(profile);
       ret = stat(path, &s);
       if (!ret && s.st_size > 1000)
          screen->firmware_info.profiles_present |= (1 << profile);
