@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 	{
 		XCloseDisplay(display);
 		fprintf(stderr, "Error, unable to find a good port.\n");
-		exit(1);
+		exit(77);
 	}
 
 	if (is_overlay)
