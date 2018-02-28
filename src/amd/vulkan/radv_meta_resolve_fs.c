@@ -62,7 +62,7 @@ build_resolve_fragment_shader(struct radv_device *dev, bool is_integer, int samp
 								 false,
 								 GLSL_TYPE_FLOAT);
 
-	snprintf(name, 64, "meta_resolve_fs-%d-%s", samples, is_integer ? "int" : "float");
+	snprintf(name, sizeof name, "meta_resolve_fs-%d-%s", samples, is_integer ? "int" : "float");
 	nir_builder_init_simple_shader(&b, NULL, MESA_SHADER_FRAGMENT, NULL);
 	b.shader->info.name = ralloc_strdup(b.shader, name);
 

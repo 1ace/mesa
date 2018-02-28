@@ -83,7 +83,7 @@ build_resolve_compute_shader(struct radv_device *dev, bool is_integer, bool is_s
 							     false,
 							     false,
 							     GLSL_TYPE_FLOAT);
-	snprintf(name, 64, "meta_resolve_cs-%d-%s", samples, is_integer ? "int" : (is_srgb ? "srgb" : "float"));
+	snprintf(name, sizeof name, "meta_resolve_cs-%d-%s", samples, is_integer ? "int" : (is_srgb ? "srgb" : "float"));
 	nir_builder_init_simple_shader(&b, NULL, MESA_SHADER_COMPUTE, NULL);
 	b.shader->info.name = ralloc_strdup(b.shader, name);
 	b.shader->info.cs.local_size[0] = 16;
