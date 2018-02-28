@@ -4151,15 +4151,14 @@ is_top_level_shader_storage_block_member(const char* name,
     * Full instanced name is: interface name + '.' + var name +
     *    NULL character
     */
-   int name_length = strlen(interface_name) + 1 + strlen(field_name) + 1;
-   char *full_instanced_name = (char *) calloc(name_length, sizeof(char));
-   if (!full_instanced_name) {
+   char *full_instanced_name;
+   int name_length = asprintf(&full_instanced_name, "%s.%s",
+                              interface_name, field_name);
+
+   if (!full_instanced_name || name_length == -1) {
       fprintf(stderr, "%s: Cannot allocate space for name\n", __func__);
       return false;
    }
-
-   snprintf(full_instanced_name, name_length, "%s.%s",
-            interface_name, field_name);
 
    /* Check if its top-level shader storage block member of an
     * instanced interface block, or of a unnamed interface block.
