@@ -282,7 +282,7 @@ vlVdpPresentationQueueDisplay(VdpPresentationQueue presentation_queue,
       char cmd[256];
 
       if (framenum) {
-         sprintf(cmd, "xwd -id %d -silent -out vdpau_frame_%08d.xwd", (int)pq->drawable, framenum);
+         snprintf(cmd, sizeof cmd, "xwd -id %d -silent -out vdpau_frame_%08d.xwd", (int)pq->drawable, framenum);
          if (system(cmd) != 0)
             VDPAU_MSG(VDPAU_ERR, "[VDPAU] Dumping surface %d failed.\n", surface);
       }
