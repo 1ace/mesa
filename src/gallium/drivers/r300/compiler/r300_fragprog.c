@@ -140,14 +140,14 @@ void r300FragmentProgramDump(struct radeon_compiler *c, void *user)
 				int msba = get_msb(R400_ADDR_EXT_A_MSB_BIT(j),
 					code->alu.inst[i].r400_ext_addr);
 
-				sprintf(srcc[j], "%c%i",
+				snprintf(srcc[j], sizeof srcc[j], "%c%i",
 					(regc & 32) ? 'c' : 't', (regc & 31) | msbc);
-				sprintf(srca[j], "%c%i",
+				snprintf(srca[j], sizeof srca[j], "%c%i",
 					(rega & 32) ? 'c' : 't', (rega & 31) | msba);
 			}
 
 			dstc[0] = 0;
-			sprintf(flags, "%s%s%s",
+			snprintf(flags, sizeof flags, "%s%s%s",
 				(code->alu.inst[i].
 				 rgb_addr & R300_ALU_DSTC_REG_X) ? "x" : "",
 				(code->alu.inst[i].
@@ -159,13 +159,13 @@ void r300FragmentProgramDump(struct radeon_compiler *c, void *user)
 					R400_ADDRD_EXT_RGB_MSB_BIT,
 					code->alu.inst[i].r400_ext_addr);
 
-				sprintf(dstc, "t%i.%s ",
+				snprintf(dstc, sizeof dstc, "t%i.%s ",
 					((code->alu.inst[i].
 					 rgb_addr >> R300_ALU_DSTC_SHIFT)
 					 & 31) | msb,
 					flags);
 			}
-			sprintf(flags, "%s%s%s",
+			snprintf(flags, sizeof flags, "%s%s%s",
 				(code->alu.inst[i].
 				 rgb_addr & R300_ALU_DSTC_OUTPUT_X) ? "x" : "",
 				(code->alu.inst[i].
@@ -173,7 +173,7 @@ void r300FragmentProgramDump(struct radeon_compiler *c, void *user)
 				(code->alu.inst[i].
 				 rgb_addr & R300_ALU_DSTC_OUTPUT_Z) ? "z" : "");
 			if (flags[0] != 0) {
-				sprintf(tmp, "o%i.%s",
+				snprintf(tmp, sizeof tmp, "o%i.%s",
 					(code->alu.inst[i].
 					 rgb_addr >> 29) & 3,
 					flags);
@@ -188,13 +188,13 @@ void r300FragmentProgramDump(struct radeon_compiler *c, void *user)
 				unsigned int msb = get_msb(
 					R400_ADDRD_EXT_A_MSB_BIT,
 					code->alu.inst[i].r400_ext_addr);
-				sprintf(dsta, "t%i.w ",
+				snprintf(dsta, sizeof dsta, "t%i.w ",
 					((code->alu.inst[i].
 					 alpha_addr >> R300_ALU_DSTA_SHIFT) & 31)
 					 | msb);
 			}
 			if (code->alu.inst[i].alpha_addr & R300_ALU_DSTA_OUTPUT) {
-				sprintf(tmp, "o%i.w ",
+				snprintf(tmp, sizeof tmp, "o%i.w ",
 					(code->alu.inst[i].
 					 alpha_addr >> 25) & 3);
 				strcat(dsta, tmp);
@@ -221,105 +221,105 @@ void r300FragmentProgramDump(struct radeon_compiler *c, void *user)
 				if (d < 12) {
 					switch (d % 4) {
 					case R300_ALU_ARGC_SRC0C_XYZ:
-						sprintf(buf, "%s.xyz",
+						snprintf(buf, sizeof buf, "%s.xyz",
 							srcc[d / 4]);
 						break;
 					case R300_ALU_ARGC_SRC0C_XXX:
-						sprintf(buf, "%s.xxx",
+						snprintf(buf, sizeof buf, "%s.xxx",
 							srcc[d / 4]);
 						break;
 					case R300_ALU_ARGC_SRC0C_YYY:
-						sprintf(buf, "%s.yyy",
+						snprintf(buf, sizeof buf, "%s.yyy",
 							srcc[d / 4]);
 						break;
 					case R300_ALU_ARGC_SRC0C_ZZZ:
-						sprintf(buf, "%s.zzz",
+						snprintf(buf, sizeof buf, "%s.zzz",
 							srcc[d / 4]);
 						break;
 					}
 				} else if (d < 15) {
-					sprintf(buf, "%s.www", srca[d - 12]);
+					snprintf(buf, sizeof buf, "%s.www", srca[d - 12]);
 				} else if (d < 20 ) {
 					switch(d) {
 					case R300_ALU_ARGC_SRCP_XYZ:
-						sprintf(buf, "srcp.xyz");
+						snprintf(buf, sizeof buf, "srcp.xyz");
 						break;
 					case R300_ALU_ARGC_SRCP_XXX:
-						sprintf(buf, "srcp.xxx");
+						snprintf(buf, sizeof buf, "srcp.xxx");
 						break;
 					case R300_ALU_ARGC_SRCP_YYY:
-						sprintf(buf, "srcp.yyy");
+						snprintf(buf, sizeof buf, "srcp.yyy");
 						break;
 					case R300_ALU_ARGC_SRCP_ZZZ:
-						sprintf(buf, "srcp.zzz");
+						snprintf(buf, sizeof buf, "srcp.zzz");
 						break;
 					case R300_ALU_ARGC_SRCP_WWW:
-						sprintf(buf, "srcp.www");
+						snprintf(buf, sizeof buf, "srcp.www");
 						break;
 					}
 				} else if (d == 20) {
-					sprintf(buf, "0.0");
+					snprintf(buf, sizeof buf, "0.0");
 				} else if (d == 21) {
-					sprintf(buf, "1.0");
+					snprintf(buf, sizeof buf, "1.0");
 				} else if (d == 22) {
-					sprintf(buf, "0.5");
+					snprintf(buf, sizeof buf, "0.5");
 				} else if (d >= 23 && d < 32) {
 					d -= 23;
 					switch (d / 3) {
 					case 0:
-						sprintf(buf, "%s.yzx",
+						snprintf(buf, sizeof buf, "%s.yzx",
 							srcc[d % 3]);
 						break;
 					case 1:
-						sprintf(buf, "%s.zxy",
+						snprintf(buf, sizeof buf, "%s.zxy",
 							srcc[d % 3]);
 						break;
 					case 2:
-						sprintf(buf, "%s.Wzy",
+						snprintf(buf, sizeof buf, "%s.Wzy",
 							srcc[d % 3]);
 						break;
 					}
 				} else {
-					sprintf(buf, "%i", d);
+					snprintf(buf, sizeof buf, "%i", d);
 				}
 
-				sprintf(argc[j], "%s%s%s%s",
+				snprintf(argc[j], sizeof argc[j], "%s%s%s%s",
 					(regc & 32) ? "-" : "",
 					(regc & 64) ? "|" : "",
 					buf, (regc & 64) ? "|" : "");
 
 				d = rega & 31;
 				if (d < 9) {
-					sprintf(buf, "%s.%c", srcc[d / 3],
+					snprintf(buf, sizeof buf, "%s.%c", srcc[d / 3],
 						'x' + (char)(d % 3));
 				} else if (d < 12) {
-					sprintf(buf, "%s.w", srca[d - 9]);
+					snprintf(buf, sizeof buf, "%s.w", srca[d - 9]);
 				} else if (d < 16) {
 					switch(d) {
 					case R300_ALU_ARGA_SRCP_X:
-						sprintf(buf, "srcp.x");
+						snprintf(buf, sizeof buf, "srcp.x");
 						break;
 					case R300_ALU_ARGA_SRCP_Y:
-						sprintf(buf, "srcp.y");
+						snprintf(buf, sizeof buf, "srcp.y");
 						break;
 					case R300_ALU_ARGA_SRCP_Z:
-						sprintf(buf, "srcp.z");
+						snprintf(buf, sizeof buf, "srcp.z");
 						break;
 					case R300_ALU_ARGA_SRCP_W:
-						sprintf(buf, "srcp.w");
+						snprintf(buf, sizeof buf, "srcp.w");
 						break;
 					}
 				} else if (d == 16) {
-					sprintf(buf, "0.0");
+					snprintf(buf, sizeof buf, "0.0");
 				} else if (d == 17) {
-					sprintf(buf, "1.0");
+					snprintf(buf, sizeof buf, "1.0");
 				} else if (d == 18) {
-					sprintf(buf, "0.5");
+					snprintf(buf, sizeof buf, "0.5");
 				} else {
-					sprintf(buf, "%i", d);
+					snprintf(buf, sizeof buf, "%i", d);
 				}
 
-				sprintf(arga[j], "%s%s%s%s",
+				snprintf(arga[j], sizeof arga[j], "%s%s%s%s",
 					(rega & 32) ? "-" : "",
 					(rega & 64) ? "|" : "",
 					buf, (rega & 64) ? "|" : "");

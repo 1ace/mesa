@@ -67,25 +67,25 @@ public:
 
 	sb_ostream& operator <<(void *p) {
 		char b[32];
-		sprintf(b, "%p", p);
+		snprintf(b, sizeof b, "%p", p);
 		return *this << b;
 	}
 
 	sb_ostream& operator <<(char c) {
 		char b[2];
-		sprintf(b, "%c", c);
+		snprintf(b, sizeof b, "%c", c);
 		return *this << b;
 	}
 
 	sb_ostream& operator <<(int n) {
 		char b[32];
-		sprintf(b, "%d", n);
+		snprintf(b, sizeof b, "%d", n);
 		return *this << b;
 	}
 
 	sb_ostream& operator <<(unsigned n) {
 		char b[32];
-		sprintf(b, "%u", n);
+		snprintf(b, sizeof b, "%u", n);
 		return *this << b;
 	}
 
@@ -98,7 +98,7 @@ public:
 	// print as field of specified width, right aligned
 	void print_w(int n, int width) {
 		char b[256],f[8];
-		sprintf(f, "%%%dd", width);
+		snprintf(f, sizeof f, "%%%dd", width);
 		snprintf(b, 256, f, n);
 		write(b);
 	}
@@ -106,7 +106,7 @@ public:
 	// print as field of specified width, left aligned
 	void print_wl(int n, int width) {
 		char b[256],f[8];
-		sprintf(f, "%%-%dd", width);
+		snprintf(f, sizeof f, "%%-%dd", width);
 		snprintf(b, 256, f, n);
 		write(b);
 	}
@@ -123,7 +123,7 @@ public:
 	// print int as field of specified width, right aligned, zero-padded
 	void print_zw(int n, int width) {
 		char b[256],f[8];
-		sprintf(f, "%%0%dd", width);
+		snprintf(f, sizeof f, "%%0%dd", width);
 		snprintf(b, 256, f, n);
 		write(b);
 	}
@@ -131,7 +131,7 @@ public:
 	// print int as field of specified width, right aligned, zero-padded, hex
 	void print_zw_hex(int n, int width) {
 		char b[256],f[8];
-		sprintf(f, "%%0%dx", width);
+		snprintf(f, sizeof f, "%%0%dx", width);
 		snprintf(b, 256, f, n);
 		write(b);
 	}
