@@ -426,6 +426,7 @@ int parse_rc_normal_instruction(
 						tokens.Srcs[j].Length);
 			src_str[tokens.Srcs[j].Length] = '\0';
 			init_rc_normal_src(inst, j, src_str);
+			free(src_str);
 		}
 		if (info->HasTexture) {
 			/* XXX: Will this always be XYZW ? */
