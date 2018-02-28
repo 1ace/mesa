@@ -80,9 +80,12 @@ main(int argc, char **argv)
     */
    _mesa_hash_table_insert_pre_hashed(ht, bad_hash, str1, NULL);
    for (i = 0; i < 100; i++) {
-      char *key = malloc(10);
-      sprintf(key, "spam%d", i);
+      char *key;
+      int len = asprintf(&key, "spam%d", i);
+      if (!key || len == -1)
+         return 1;
       _mesa_hash_table_insert_pre_hashed(ht, _mesa_hash_string(key), key, NULL);
+      free(key);
    }
    entry1 = _mesa_hash_table_search_pre_hashed(ht, bad_hash, str1);
    assert(entry1->key == str1);
