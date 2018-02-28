@@ -458,7 +458,7 @@ Status XvMCPutSurface(Display *dpy, XvMCSurface *surface, Drawable drawable,
       static unsigned int framenum = 0;
       char cmd[256];
 
-      sprintf(cmd, "xwd -id %d -out xvmc_frame_%08d.xwd", (int)drawable, ++framenum);
+      snprintf(cmd, sizeof cmd, "xwd -id %d -out xvmc_frame_%08d.xwd", (int)drawable, ++framenum);
       if (system(cmd) != 0)
          XVMC_MSG(XVMC_ERR, "[XvMC] Dumping surface %p failed.\n", surface);
    }
