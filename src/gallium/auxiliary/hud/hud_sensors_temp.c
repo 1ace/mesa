@@ -345,26 +345,26 @@ hud_get_num_sensors(bool displayhelp)
 
    if (displayhelp) {
       list_for_each_entry(struct sensors_temp_info, sti, &gsensors_temp_list, list) {
-         char line[64];
+         char *mode;
          switch (sti->mode) {
          case SENSORS_TEMP_CURRENT:
-            snprintf(line, sizeof(line), "    sensors_temp_cu-%s", sti->name);
+            mode = "sensors_temp_cu";
             break;
          case SENSORS_TEMP_CRITICAL:
-            snprintf(line, sizeof(line), "    sensors_temp_cr-%s", sti->name);
+            mode = "sensors_temp_cr";
             break;
          case SENSORS_VOLTAGE_CURRENT:
-            snprintf(line, sizeof(line), "    sensors_volt_cu-%s", sti->name);
+            mode = "sensors_volt_cu";
             break;
          case SENSORS_CURRENT_CURRENT:
-            snprintf(line, sizeof(line), "    sensors_curr_cu-%s", sti->name);
+            mode = "sensors_curr_cu";
             break;
          case SENSORS_POWER_CURRENT:
-            snprintf(line, sizeof(line), "    sensors_pow_cu-%s", sti->name);
+            mode = "sensors_pow_cu";
             break;
          }
 
-         puts(line);
+         printf("    %s-%s\n", mode, sti->name);
       }
    }
 
