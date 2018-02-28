@@ -726,7 +726,7 @@ radv_print_spirv(uint32_t *data, uint32_t size, FILE *fp)
 	if (write(fd, data, size) == -1)
 		goto fail;
 
-	sprintf(command, "spirv-dis %s", path);
+	snprintf(command, sizeof command, "spirv-dis %s", path);
 
 	/* Disassemble using spirv-dis if installed. */
 	p = popen(command, "r");

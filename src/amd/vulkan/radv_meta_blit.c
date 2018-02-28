@@ -108,7 +108,7 @@ build_nir_copy_fragment_shader(enum glsl_sampler_dim tex_dim)
 
 	nir_builder_init_simple_shader(&b, NULL, MESA_SHADER_FRAGMENT, NULL);
 
-	sprintf(shader_name, "meta_blit_fs.%d", tex_dim);
+	snprintf(shader_name, sizeof shader_name, "meta_blit_fs.%d", tex_dim);
 	b.shader->info.name = ralloc_strdup(b.shader, shader_name);
 
 	nir_variable *tex_pos_in = nir_variable_create(b.shader, nir_var_shader_in,
@@ -162,7 +162,7 @@ build_nir_copy_fragment_shader_depth(enum glsl_sampler_dim tex_dim)
 
 	nir_builder_init_simple_shader(&b, NULL, MESA_SHADER_FRAGMENT, NULL);
 
-	sprintf(shader_name, "meta_blit_depth_fs.%d", tex_dim);
+	snprintf(shader_name, sizeof shader_name, "meta_blit_depth_fs.%d", tex_dim);
 	b.shader->info.name = ralloc_strdup(b.shader, shader_name);
 
 	nir_variable *tex_pos_in = nir_variable_create(b.shader, nir_var_shader_in,
@@ -216,7 +216,7 @@ build_nir_copy_fragment_shader_stencil(enum glsl_sampler_dim tex_dim)
 
 	nir_builder_init_simple_shader(&b, NULL, MESA_SHADER_FRAGMENT, NULL);
 
-	sprintf(shader_name, "meta_blit_stencil_fs.%d", tex_dim);
+	snprintf(shader_name, sizeof shader_name, "meta_blit_stencil_fs.%d", tex_dim);
 	b.shader->info.name = ralloc_strdup(b.shader, shader_name);
 
 	nir_variable *tex_pos_in = nir_variable_create(b.shader, nir_var_shader_in,
