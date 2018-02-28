@@ -67,7 +67,7 @@ GUID_equal( const GUID *a,
 }
 
 char* GUID_sprintf(char *guid_str, REFGUID id) {
-    sprintf( guid_str,
+    snprintf(guid_str, 64,
              "{%08X,%04X,%04X,%02X%02X%02X%02X%02X%02X%02X%02X}",
              id->Data1,
              id->Data2,
