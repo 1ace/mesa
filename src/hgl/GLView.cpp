@@ -159,7 +159,7 @@ void
 BGLView::ErrorCallback(unsigned long errorCode)
 {
 	char msg[32];
-	sprintf(msg, "GL: Error code $%04lx.", errorCode);
+	snprintf(msg, sizeof msg, "GL: Error code $%04lx.", errorCode);
 	// TODO: under BeOS R5, it call debugger(msg);
 	fprintf(stderr, "%s\n", msg);
 }
@@ -519,7 +519,7 @@ BGLScreen::ErrorCallback(unsigned long errorCode)
 {
 	// Mesa's GLenum is not ulong but uint!
 	char msg[32];
-	sprintf(msg, "GL: Error code $%04lx.", errorCode);
+	snprintf(msg, sizeof msg, "GL: Error code $%04lx.", errorCode);
 	// debugger(msg);
 	fprintf(stderr, "%s\n", msg);
 	return;
