@@ -409,18 +409,18 @@ static const char *get_reg_name( struct reg *reg )
    
    if (reg->flags & ISVEC) {
       if (reg->idx/4 != reg->closest->idx)
-	 sprintf(tmp, "%s+%d[%d]", 
+	 snprintf(tmp, sizeof tmp, "%s+%d[%d]",
 		 reg->closest->name, 
 		 (reg->idx/4) - reg->closest->idx,
 		 reg->idx%4);
       else
-	 sprintf(tmp, "%s[%d]", reg->closest->name, reg->idx%4);
+	 snprintf(tmp, sizeof tmp, "%s[%d]", reg->closest->name, reg->idx%4);
    }
    else {
       if (reg->idx != reg->closest->idx)
-	 sprintf(tmp, "%s+%d", reg->closest->name, reg->idx - reg->closest->idx);
+	 snprintf(tmp, sizeof tmp, "%s+%d", reg->closest->name, reg->idx - reg->closest->idx);
       else
-	 sprintf(tmp, "%s", reg->closest->name);
+	 snprintf(tmp, sizeof tmp, "%s", reg->closest->name);
    }
 
    return tmp;
