@@ -84,7 +84,7 @@ static const GLubyte *r200GetString( struct gl_context *ctx, GLenum name )
    case GL_RENDERER:
       offset = driGetRendererString( buffer, "R200", agp_mode );
 
-      sprintf( & buffer[ offset ], " %sTCL",
+      snprintf( & buffer[ offset ], sizeof buffer - offset, " %sTCL",
 	       !(rmesa->radeon.TclFallback & R200_TCL_FALLBACK_TCL_DISABLE)
 	       ? "" : "NO-" );
 
