@@ -357,7 +357,7 @@ static void si_add_split_disasm(const char *disasm,
 		/* More than 16 chars after ";" means the instruction is 8 bytes long. */
 		inst->size = next - semicolon > 16 ? 8 : 4;
 
-		snprintf(inst->text + len, ARRAY_SIZE(inst->text) - len,
+		snprintf(inst->text + len, sizeof(inst->text) - len,
 			" [PC=0x%"PRIx64", off=%u, size=%u]",
 			start_addr + inst->offset, inst->offset, inst->size);
 
