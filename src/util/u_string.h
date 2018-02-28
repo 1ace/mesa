@@ -113,6 +113,17 @@ util_sprintf(char *str, const char *format, ...)
 }
 
 static inline int
+   PRINTFLIKE(2, 3)
+util_asprintf(char **str, const char *format, ...)
+{
+   va_list ap;
+   va_start(ap, format);
+   int r = util_vasnprintf(str, format, ap);
+   va_end(ap);
+   return r;
+}
+
+static inline int
 util_vasprintf(char **ret, const char *format, va_list ap)
 {
    va_list ap_copy;
@@ -212,6 +223,7 @@ util_strstr(const char *haystack, const char *needle)
 #define util_vsprintf vsprintf
 #define util_vasprintf vasprintf
 #define util_sprintf sprintf
+#define util_asprintf asprintf
 #define util_strchr strchr
 #define util_strcmp strcmp
 #define util_strncmp strncmp
