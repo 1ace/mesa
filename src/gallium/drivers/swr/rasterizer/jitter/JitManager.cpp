@@ -331,9 +331,9 @@ void JitManager::DumpAsm(Function* pFunction, const char* fileName)
         const char *funcName = pFunction->getName().data();
         char fName[256];
 #if defined(_WIN32)
-        sprintf(fName, "%s\\%s.%s.asm", outDir.str().c_str(), funcName, fileName);
+        snprintf(fName, sizeof fName, "%s\\%s.%s.asm", outDir.str().c_str(), funcName, fileName);
 #else
-        sprintf(fName, "%s.%s.asm", funcName, fileName);
+        snprintf(fName, sizeof fName, "%s.%s.asm", funcName, fileName);
 #endif
 
         raw_fd_ostream filestream(fName, EC, llvm::sys::fs::F_None);
@@ -375,9 +375,9 @@ void JitManager::DumpToFile(Module *M, const char *fileName)
         const char *funcName = M->getName().data();
         char fName[256];
 #if defined(_WIN32)
-        sprintf(fName, "%s\\%s.%s.ll", outDir.c_str(), funcName, fileName);
+        snprintf(fName, sizeof fName, "%s\\%s.%s.ll", outDir.c_str(), funcName, fileName);
 #else
-        sprintf(fName, "%s.%s.ll", funcName, fileName);
+        snprintf(fName, sizeof fName, "%s.%s.ll", funcName, fileName);
 #endif
         raw_fd_ostream fd(fName, EC, llvm::sys::fs::F_None);
         M->print(fd, nullptr);
@@ -397,17 +397,17 @@ void JitManager::DumpToFile(Function *f, const char *fileName)
         const char *funcName = f->getName().data();
         char fName[256];
 #if defined(_WIN32)
-        sprintf(fName, "%s\\%s.%s.ll", outDir.c_str(), funcName, fileName);
+        snprintf(fName, sizeof fName, "%s\\%s.%s.ll", outDir.c_str(), funcName, fileName);
 #else
-        sprintf(fName, "%s.%s.ll", funcName, fileName);
+        snprintf(fName, sizeof fName, "%s.%s.ll", funcName, fileName);
 #endif
         raw_fd_ostream fd(fName, EC, llvm::sys::fs::F_None);
         f->print(fd, nullptr);
 
 #if defined(_WIN32)
-        sprintf(fName, "%s\\cfg.%s.%s.dot", outDir.c_str(), funcName, fileName);
+        snprintf(fName, sizeof fName, "%s\\cfg.%s.%s.dot", outDir.c_str(), funcName, fileName);
 #else
-        sprintf(fName, "cfg.%s.%s.dot", funcName, fileName);
+        snprintf(fName, sizeof fName, "cfg.%s.%s.dot", funcName, fileName);
 #endif
         fd.flush();
 

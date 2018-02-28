@@ -38,7 +38,7 @@ swr_initialize_screen_interface(struct swr_screen *screen, const char arch[])
    fprintf(stderr, "(using: builtin).\n");
 #else
    char filename[256] = { 0 };
-   sprintf(filename, "%sswr%s%s", UTIL_DL_PREFIX, arch, UTIL_DL_EXT);
+   snprintf(filename, sizeof filename, "%sswr%s%s", UTIL_DL_PREFIX, arch, UTIL_DL_EXT);
 
    screen->pLibrary = util_dl_open(filename);
    if (!screen->pLibrary) {

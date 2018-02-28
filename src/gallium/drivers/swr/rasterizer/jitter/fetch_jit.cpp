@@ -2916,7 +2916,7 @@ PFN_FETCH_FUNC JitFetchFunc(HANDLE hJitMgr, const HANDLE hFunc)
 #if defined(KNOB_SWRC_TRACING)
     char fName[1024];
     const char *funcName = func->getName().data();
-    sprintf(fName, "%s.bin", funcName);
+    snprintf(fName, sizeof fName, "%s.bin", funcName);
     FILE *fd = fopen(fName, "wb");
     fwrite((void *)pfnFetch, 1, 2048, fd);
     fclose(fd);
