@@ -1910,7 +1910,7 @@ texture_error_check( struct gl_context *ctx,
     * requires GL_OES_texture_float) are filtered elsewhere.
     */
    char bufCallerName[20];
-   snprintf(bufCallerName, 20, "glTexImage%dD", dimensions);
+   snprintf(bufCallerName, sizeof bufCallerName, "glTexImage%dD", dimensions);
    if (_mesa_is_gles(ctx) &&
        texture_format_error_check_gles(ctx, format, type,
                                        internalFormat, bufCallerName)) {
