@@ -98,7 +98,7 @@ get_cpu_stats(unsigned cpu_index, uint64_t *busy_time, uint64_t *total_time)
    if (cpu_index == ALL_CPUS)
       strcpy(cpuname, "cpu");
    else
-      sprintf(cpuname, "cpu%u", cpu_index);
+      snprintf(cpuname, sizeof cpuname, "cpu%u", cpu_index);
 
    f = fopen("/proc/stat", "r");
    if (!f)
@@ -198,7 +198,7 @@ hud_cpu_graph_install(struct hud_pane *pane, unsigned cpu_index)
    if (cpu_index == ALL_CPUS)
       strcpy(gr->name, "cpu");
    else
-      sprintf(gr->name, "cpu%u", cpu_index);
+      snprintf(gr->name, sizeof gr->name, "cpu%u", cpu_index);
 
    gr->query_data = CALLOC_STRUCT(cpu_info);
    if (!gr->query_data) {

@@ -571,7 +571,7 @@ util_make_fragment_passthrough_shader(struct pipe_context *pipe,
    struct tgsi_token tokens[1000];
    struct pipe_shader_state state;
 
-   sprintf(text, shader_templ,
+   snprintf(text, sizeof text, shader_templ,
            write_all_cbufs ? "PROPERTY FS_COLOR0_WRITES_ALL_CBUFS 1\n" : "",
            tgsi_semantic_names[input_semantic],
            tgsi_interpolate_names[input_interpolate]);
@@ -785,7 +785,7 @@ util_make_fs_blit_msaa_depthstencil(struct pipe_context *pipe,
    assert(tgsi_tex == TGSI_TEXTURE_2D_MSAA ||
           tgsi_tex == TGSI_TEXTURE_2D_ARRAY_MSAA);
 
-   sprintf(text, shader_templ, type, type, type);
+   snprintf(text, sizeof text, shader_templ, type, type, type);
 
    if (!tgsi_text_translate(text, tokens, ARRAY_SIZE(tokens))) {
       assert(0);

@@ -208,7 +208,7 @@ hud_draw_string(struct hud_context *hud, unsigned x, unsigned y,
 
 static void
 number_to_human_readable(double num, enum pipe_driver_query_type type,
-                         char *out)
+                         char *out, size_t out_len)
 {
    static const char *byte_units[] =
       {" B", " KB", " MB", " GB", " TB", " PB", " EB"};
@@ -289,13 +289,13 @@ number_to_human_readable(double num, enum pipe_driver_query_type type,
 
    /* Show at least 4 digits with at most 3 decimal places, but not zeros. */
    if (d >= 1000 || d == (int)d)
-      sprintf(out, "%.0f%s", d, units[unit]);
+      snprintf(out, out_len, "%.0f%s", d, units[unit]);
    else if (d >= 100 || d*10 == (int)(d*10))
-      sprintf(out, "%.1f%s", d, units[unit]);
+      snprintf(out, out_len, "%.1f%s", d, units[unit]);
    else if (d >= 10 || d*100 == (int)(d*100))
-      sprintf(out, "%.2f%s", d, units[unit]);
+      snprintf(out, out_len, "%.2f%s", d, units[unit]);
    else
-      sprintf(out, "%.3f%s", d, units[unit]);
+      snprintf(out, out_len, "%.3f%s", d, units[unit]);
 }
 
 static void
@@ -346,7 +346,7 @@ hud_pane_accumulate_vertices(struct hud_context *hud,
                    hud->font.glyph_height / 2;
 
       number_to_human_readable(pane->max_value * i / last_line,
-                               pane->type, str);
+                               pane->type, str, sizeof str);
       hud_draw_string(hud, x, y, "%s", str);
    }
 
@@ -356,7 +356,7 @@ hud_pane_accumulate_vertices(struct hud_context *hud,
       unsigned x = pane->x1 + 2;
       unsigned y = pane->y2 + 2 + i*hud->font.glyph_height;
 
-      number_to_human_readable(gr->current_value, pane->type, str);
+      number_to_human_readable(gr->current_value, pane->type, str, sizeof str);
       hud_draw_string(hud, x, y, "  %s: %s", gr->name, str);
       i++;
    }
