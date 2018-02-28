@@ -511,5 +511,5 @@ main(void)
    expect_equal(err, 0, "Removing " CACHE_TEST_TMP " again");
 #endif /* ENABLE_SHADER_CACHE */
 
-   return error ? 1 : 0;
+   return error ? EXIT_FAILURE : EXIT_SUCCESS;
 }
