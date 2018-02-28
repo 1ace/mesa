@@ -134,12 +134,11 @@ brw_queryobj_get_results(struct gl_context *ctx,
 			 struct brw_query_object *query)
 {
    struct brw_context *brw = brw_context(ctx);
-   const struct gen_device_info *devinfo = &brw->screen->devinfo;
 
    int i;
    uint64_t *results;
 
-   assert(devinfo->gen < 6);
+   assert(brw->screen->devinfo.gen < 6);
 
    if (query->bo == NULL)
       return;
@@ -261,9 +260,8 @@ brw_begin_query(struct gl_context *ctx, struct gl_query_object *q)
 {
    struct brw_context *brw = brw_context(ctx);
    struct brw_query_object *query = (struct brw_query_object *)q;
-   const struct gen_device_info *devinfo = &brw->screen->devinfo;
 
-   assert(devinfo->gen < 6);
+   assert(brw->screen->devinfo.gen < 6);
 
    switch (query->Base.Target) {
    case GL_TIME_ELAPSED_EXT:
@@ -333,9 +331,8 @@ brw_end_query(struct gl_context *ctx, struct gl_query_object *q)
 {
    struct brw_context *brw = brw_context(ctx);
    struct brw_query_object *query = (struct brw_query_object *)q;
-   const struct gen_device_info *devinfo = &brw->screen->devinfo;
 
-   assert(devinfo->gen < 6);
+   assert(brw->screen->devinfo.gen < 6);
 
    switch (query->Base.Target) {
    case GL_TIME_ELAPSED_EXT:
@@ -387,9 +384,8 @@ brw_end_query(struct gl_context *ctx, struct gl_query_object *q)
 static void brw_wait_query(struct gl_context *ctx, struct gl_query_object *q)
 {
    struct brw_query_object *query = (struct brw_query_object *)q;
-   const struct gen_device_info *devinfo = &brw_context(ctx)->screen->devinfo;
 
-   assert(devinfo->gen < 6);
+   assert(brw_context(ctx)->screen->devinfo.gen < 6);
 
    brw_queryobj_get_results(ctx, query);
    query->Base.Ready = true;
@@ -405,9 +401,8 @@ static void brw_check_query(struct gl_context *ctx, struct gl_query_object *q)
 {
    struct brw_context *brw = brw_context(ctx);
    struct brw_query_object *query = (struct brw_query_object *)q;
-   const struct gen_device_info *devinfo = &brw->screen->devinfo;
 
-   assert(devinfo->gen < 6);
+   assert(brw->screen->devinfo.gen < 6);
 
    /* From the GL_ARB_occlusion_query spec:
     *
@@ -435,9 +430,8 @@ static void
 ensure_bo_has_space(struct gl_context *ctx, struct brw_query_object *query)
 {
    struct brw_context *brw = brw_context(ctx);
-   const struct gen_device_info *devinfo = &brw->screen->devinfo;
 
-   assert(devinfo->gen < 6);
+   assert(brw->screen->devinfo.gen < 6);
 
    if (!query->bo || query->last_index * 2 + 1 >= 4096 / sizeof(uint64_t)) {
 
