@@ -411,7 +411,7 @@ lower_shared_reference_visitor::lower_shared_atomic_intrinsic(ir_call *ir)
    sig->intrinsic_id = MAP_INTRINSIC_TO_TYPE(ir->callee->intrinsic_id, shared);
 
    char func_name[64];
-   sprintf(func_name, "%s_shared", ir->callee_name());
+   snprintf(func_name, sizeof func_name, "%s_shared", ir->callee_name());
    ir_function *f = new(mem_ctx) ir_function(func_name);
    f->add_signature(sig);
 
