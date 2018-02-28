@@ -1033,8 +1033,5 @@ wsi_wl_finish_wsi(struct wsi_device *wsi_device,
 {
    struct wsi_wayland *wsi =
       (struct wsi_wayland *)wsi_device->wsi[VK_ICD_WSI_PLATFORM_WAYLAND];
-   if (!wsi)
-      return;
-
    vk_free(alloc, wsi);
 }
