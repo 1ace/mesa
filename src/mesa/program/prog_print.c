@@ -384,41 +384,41 @@ reg_string(gl_register_file f, GLint index, gl_prog_print_mode mode,
 
    switch (mode) {
    case PROG_PRINT_DEBUG:
-      sprintf(str, "%s[%s%d]",
+      snprintf(str, sizeof str, "%s[%s%d]",
               _mesa_register_file_name(f), addr, index);
       break;
 
    case PROG_PRINT_ARB:
       switch (f) {
       case PROGRAM_INPUT:
-         sprintf(str, "%s", arb_input_attrib_string(index, prog->Target));
+         snprintf(str, sizeof str, "%s", arb_input_attrib_string(index, prog->Target));
          break;
       case PROGRAM_OUTPUT:
-         sprintf(str, "%s", arb_output_attrib_string(index, prog->Target));
+         snprintf(str, sizeof str, "%s", arb_output_attrib_string(index, prog->Target));
          break;
       case PROGRAM_TEMPORARY:
-         sprintf(str, "temp%d", index);
+         snprintf(str, sizeof str, "temp%d", index);
          break;
       case PROGRAM_CONSTANT: /* extension */
-         sprintf(str, "constant[%s%d]", addr, index);
+         snprintf(str, sizeof str, "constant[%s%d]", addr, index);
          break;
       case PROGRAM_UNIFORM: /* extension */
-         sprintf(str, "uniform[%s%d]", addr, index);
+         snprintf(str, sizeof str, "uniform[%s%d]", addr, index);
          break;
       case PROGRAM_SYSTEM_VALUE:
-         sprintf(str, "sysvalue[%s%d]", addr, index);
+         snprintf(str, sizeof str, "sysvalue[%s%d]", addr, index);
          break;
       case PROGRAM_STATE_VAR:
          {
             struct gl_program_parameter *param
                = prog->Parameters->Parameters + index;
             char *state = _mesa_program_state_string(param->StateIndexes);
-            sprintf(str, "%s", state);
+            snprintf(str, sizeof str, "%s", state);
             free(state);
          }
          break;
       case PROGRAM_ADDRESS:
-         sprintf(str, "A%d", index);
+         snprintf(str, sizeof str, "A%d", index);
          break;
       default:
          _mesa_problem(NULL, "bad file in reg_string()");

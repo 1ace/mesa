@@ -938,7 +938,7 @@ static void
 append_index(char *dst, GLint index)
 {
    char s[20];
-   sprintf(s, "[%d]", index);
+   snprintf(s, sizeof s, "[%d]", index);
    append(dst, s);
 }
 
@@ -1016,9 +1016,9 @@ _mesa_program_state_string(const gl_state_index16 state[STATE_LENGTH])
          if (modifier)
             append_token(str, modifier);
          if (firstRow == lastRow)
-            sprintf(tmp, ".row[%d]", firstRow);
+            snprintf(tmp, sizeof tmp, ".row[%d]", firstRow);
          else
-            sprintf(tmp, ".row[%d..%d]", firstRow, lastRow);
+            snprintf(tmp, sizeof tmp, ".row[%d..%d]", firstRow, lastRow);
          append(str, tmp);
       }
       break;
