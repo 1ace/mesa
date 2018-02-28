@@ -326,5 +326,7 @@ main(int argc, char **argv)
       fail |= run_tests(devinfo);
    }
 
+   free(devinfo);
+
    return fail;
 }
