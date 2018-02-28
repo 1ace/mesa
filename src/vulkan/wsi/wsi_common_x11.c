@@ -1495,18 +1495,19 @@ void
 wsi_x11_finish_wsi(struct wsi_device *wsi_device,
                    const VkAllocationCallbacks *alloc)
 {
+   struct hash_entry *entry;
    struct wsi_x11 *wsi =
       (struct wsi_x11 *)wsi_device->wsi[VK_ICD_WSI_PLATFORM_XCB];
 
-   if (wsi) {
-      struct hash_entry *entry;
-      hash_table_foreach(wsi->connections, entry)
-         wsi_x11_connection_destroy(alloc, entry->data);
+   if (!wsi)
+      return;
 
-      _mesa_hash_table_destroy(wsi->connections, NULL);
+   hash_table_foreach(wsi->connections, entry)
+      wsi_x11_connection_destroy(alloc, entry->data);
 
-      pthread_mutex_destroy(&wsi->mutex);
+   _mesa_hash_table_destroy(wsi->connections, NULL);
 
-      vk_free(alloc, wsi);
-   }
+   pthread_mutex_destroy(&wsi->mutex);
+
+   vk_free(alloc, wsi);
 }
