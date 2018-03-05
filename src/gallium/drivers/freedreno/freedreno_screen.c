@@ -630,7 +630,7 @@ fd_get_compute_param(struct pipe_screen *pscreen, enum pipe_shader_ir ir_type,
 		enum pipe_compute_cap param, void *ret)
 {
 	struct fd_screen *screen = fd_screen(pscreen);
-	const char * const ir = "ir3";
+	const char ir[] = "ir3";
 
 	if (!has_compute(screen))
 		return 0;
@@ -652,8 +652,8 @@ fd_get_compute_param(struct pipe_screen *pscreen, enum pipe_shader_ir ir_type,
 
 	case PIPE_COMPUTE_CAP_IR_TARGET:
 		if (ret)
-			sprintf(ret, ir);
-		return strlen(ir) * sizeof(char);
+			sprintf(ret, "%s", ir);
+		return sizeof(ir);
 
 	case PIPE_COMPUTE_CAP_GRID_DIMENSION:
 		RET((uint64_t []) { 3 });
