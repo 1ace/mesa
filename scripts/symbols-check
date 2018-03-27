@@ -1,0 +1,68 @@
+#!/bin/sh
+set -eu
+set -o pipefail
+
+# Platform specific symbols
+# These will simply be ignored
+PLAT_FUNCS="
+__bss_start
+_init
+_fini
+_end
+_edata
+"
+
+if [ -z "$LIB" ]; then
+  echo "\$LIB needs to be defined for autotools to be able to run this test"
+  exit 1
+fi
+
+# The lib name is passed in with Meson but autotools doesn't support that
+# so it needs to be hardcoded and overwritten here
+if [ $# -ge 1 ]; then
+  LIB=$1
+fi
+
+if ! [ -f "$LIB" ]; then
+  echo "lib $LIB doesn't exist"
+  exit 1
+fi
+
+if [ -z "$NM" ]; then
+  echo "\$NM is undefined or empty"
+  exit 1
+elif ! command -v $NM >/dev/null; then
+  echo "\$NM is not a valid command"
+  exit 1
+fi
+
+AVAIL_FUNCS="$($NM -D --format=bsd --defined-only $LIB | awk '{print $3}')"
+
+NEW_ABI=$(echo "$AVAIL_FUNCS" | while read func; do
+  echo "$REQ_FUNCS" | grep -q "^$func$" && continue
+  echo "$PLAT_FUNCS" | grep -q "^$func$" && continue
+
+  echo $func
+done)
+
+REMOVED_ABI=$(echo "$REQ_FUNCS" | while read func; do
+  echo "$AVAIL_FUNCS" | grep -q "^$func$" && continue
+
+  echo $func
+done)
+
+if [ -n "$NEW_ABI" ]; then
+  echo "New ABI detected - If intentional, update the test."
+  echo "$NEW_ABI"
+fi
+
+if [ -n "$REMOVED_ABI" ]; then
+  echo "ABI break detected - Required symbol(s) no longer exported!"
+  echo "$REMOVED_ABI"
+fi
+
+if [ -z "$NEW_ABI" ] && [ -z "$REMOVED_ABI" ]; then
+  exit 0
+else
+  exit 1
+fi
