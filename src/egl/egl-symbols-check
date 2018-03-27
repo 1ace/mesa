@@ -1,15 +1,10 @@
 #!/bin/sh
 set -eu
 
-LIB=${1-.libs/libEGL.so}
+LIB=.libs/libEGL.so
 
-if ! [ -f "$LIB" ]
-then
-  exit 1
-fi
-
-FUNCS=$($NM -D --defined-only $LIB | grep -o "T .*" | cut -c 3- | while read func; do
-( grep -q "^$func$" || echo $func )  <<EOF
+# Official ABI, taken from the header.
+REQ_FUNCS="
 eglBindAPI
 eglBindTexImage
 eglChooseConfig
@@ -56,10 +51,7 @@ eglWaitNative
 eglWaitSync
 MesaGLInteropEGLQueryDeviceInfo
 MesaGLInteropEGLExportObject
-_fini
-_init
-EOF
-done)
+"
 
-test ! -n "$FUNCS" || echo $FUNCS
-test ! -n "$FUNCS"
+# Run the checks
+source "$top_srcdir"/scripts/symbols-check

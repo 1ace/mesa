@@ -220,6 +220,8 @@ else
 TESTS += egl-symbols-check
 endif
 
+AM_TESTS_ENVIRONMENT = top_srcdir='$(top_srcdir)'
+
 EXTRA_DIST = \
 	$(TESTS) \
 	SConscript \
