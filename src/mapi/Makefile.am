@@ -21,6 +21,7 @@
 
 SUBDIRS =
 TESTS =
+AM_TESTS_ENVIRONMENT = top_srcdir='$(top_srcdir)'
 
 BUILT_SOURCES =
 CLEANFILES = $(BUILT_SOURCES)

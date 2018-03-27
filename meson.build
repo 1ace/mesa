@@ -1344,6 +1344,7 @@ pkg = import('pkgconfig')
 
 env_test = environment()
 env_test.set('NM', find_program('nm').path())
+env_test.set('top_srcdir', meson.source_root())
 
 subdir('include')
 subdir('bin')
