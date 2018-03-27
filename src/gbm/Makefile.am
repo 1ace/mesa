@@ -52,6 +52,7 @@ libgbm_la_LIBADD += \
 endif
 
 TESTS = gbm-symbols-check
+AM_TESTS_ENVIRONMENT = top_srcdir='$(top_srcdir)'
 EXTRA_DIST = gbm-symbols-check meson.build
 
 include $(top_srcdir)/install-lib-links.mk
