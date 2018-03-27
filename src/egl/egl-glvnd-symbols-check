@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+LIB=.libs/libEGL_mesa.so
+
+# Official ABI, taken from the header.
+REQ_FUNCS="
+__egl_Main
+"
+
+# Run the checks
+source "$top_srcdir"/scripts/symbols-check

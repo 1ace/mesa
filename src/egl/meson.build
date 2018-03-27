@@ -203,7 +203,11 @@ endif
 
 if with_tests
   if with_glvnd
-    # TODO: add glvnd symbol check
+    test('egl-glvnd-symbols-check',
+      find_program('egl-glvnd-symbols-check'),
+      env : env_test,
+      args : libegl
+    )
   else
     test('egl-symbols-check',
       find_program('egl-symbols-check'),

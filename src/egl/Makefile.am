@@ -215,7 +215,7 @@ egl_HEADERS = \
 TESTS = egl-entrypoint-check
 
 if USE_LIBGLVND
-#TODO: glvnd symbol check
+TESTS += egl-glvnd-symbols-check
 else
 TESTS += egl-symbols-check
 endif
