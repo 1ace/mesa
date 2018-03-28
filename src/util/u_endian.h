@@ -30,9 +30,13 @@
 #ifdef HAVE_ENDIAN_H
 #include <endian.h>
 
-#if __BYTE_ORDER == __LITTLE_ENDIAN
+#ifndef BYTE_ORDER
+#error "BYTE_ORDER undefined"
+#endif
+
+#if BYTE_ORDER == LITTLE_ENDIAN
 # define PIPE_ARCH_LITTLE_ENDIAN
-#elif __BYTE_ORDER == __BIG_ENDIAN
+#elif BYTE_ORDER == BIG_ENDIAN
 # define PIPE_ARCH_BIG_ENDIAN
 #endif
 

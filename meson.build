@@ -742,6 +742,7 @@ endif
 # TODO: this is very incomplete
 if ['linux', 'cygwin'].contains(host_machine.system())
   pre_args += '-D_GNU_SOURCE'
+  pre_args += '-D_DEFAULT_SOURCE'
 endif
 
 # Check for generic C arguments
