@@ -39,6 +39,8 @@
 #include "egldriver.h"
 #include "egllog.h"
 
+#include "util/macros.h"
+
 #ifdef HAVE_MINCORE
 #include <unistd.h>
 #include <sys/mman.h>
