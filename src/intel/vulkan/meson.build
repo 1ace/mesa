@@ -118,10 +118,8 @@ libanv_files = files(
   'anv_device.c',
   'anv_dump.c',
   'anv_formats.c',
-  'anv_genX.h',
   'anv_image.c',
   'anv_intel.c',
-  'anv_nir.h',
   'anv_nir_add_base_work_group_id.c',
   'anv_nir_apply_pipeline_layout.c',
   'anv_nir_lower_input_attachments.c',
@@ -131,11 +129,9 @@ libanv_files = files(
   'anv_pass.c',
   'anv_pipeline.c',
   'anv_pipeline_cache.c',
-  'anv_private.h',
   'anv_queue.c',
   'anv_util.c',
   'anv_wsi.c',
-  'vk_format_info.h',
 )
 
 anv_deps = [
