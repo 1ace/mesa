@@ -22,10 +22,7 @@ inc_gbm = include_directories('.', 'main', 'backends/dri')
 
 files_gbm = files(
   'main/backend.c',
-  'main/backend.h',
   'main/gbm.c',
-  'main/gbm.h',
-  'main/gbmint.h',
 )
 deps_gbm = []
 args_gbm = []
@@ -36,7 +33,7 @@ incs_gbm = [
 ]
 
 if with_dri2
-  files_gbm += files('backends/dri/gbm_dri.c', 'backends/dri/gbm_driint.h')
+  files_gbm += files('backends/dri/gbm_dri.c')
   deps_gbm += dep_libdrm # TODO: pthread-stubs
   args_gbm += '-DDEFAULT_DRIVER_DIR="@0@"'.format(dri_search_path)
 endif
