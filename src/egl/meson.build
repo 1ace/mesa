@@ -28,33 +28,18 @@ incs_for_egl = [inc_include, inc_src, inc_egl]
 
 files_egl = files(
   'main/eglapi.c',
-  'main/eglapi.h',
   'main/eglarray.c',
-  'main/eglarray.h',
   'main/eglconfig.c',
-  'main/eglconfig.h',
   'main/eglcontext.c',
-  'main/eglcontext.h',
   'main/eglcurrent.c',
-  'main/eglcurrent.h',
-  'main/egldefines.h',
   'main/egldisplay.c',
-  'main/egldisplay.h',
   'main/egldriver.c',
-  'main/egldriver.h',
   'main/eglfallbacks.c',
   'main/eglglobals.c',
-  'main/eglglobals.h',
   'main/eglimage.c',
-  'main/eglimage.h',
   'main/egllog.c',
-  'main/egllog.h',
   'main/eglsurface.c',
-  'main/eglsurface.h',
   'main/eglsync.c',
-  'main/eglsync.h',
-  'main/eglentrypoint.h',
-  'main/egltypedefs.h',
 )
 
 g_egldispatchstubs_c = custom_target(
@@ -88,8 +73,6 @@ g_egldispatchstubs_h = custom_target(
 if with_dri2
   files_egl += files(
     'drivers/dri2/egl_dri2.c',
-    'drivers/dri2/egl_dri2.h',
-    'drivers/dri2/egl_dri2_fallbacks.h',
   )
   c_args_for_egl += [
     '-DDEFAULT_DRIVER_DIR="@0@"'.format(dri_search_path),
