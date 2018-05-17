@@ -20,7 +20,7 @@
 
 libswrast_dri = static_library(
   'swrast_dri',
-  files('swrast.c', 'swrast_priv.h'),
+  files('swrast.c'),
   c_args : [c_vis_args],
   include_directories : [inc_common, inc_dri_common],
   dependencies : dep_libdrm,
