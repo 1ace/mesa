@@ -23,30 +23,11 @@ isl_gen_files = files(
   'isl_surface_state.c',
 )
 
-isl_gen4_files = files(
-  'isl_gen4.c',
-  'isl_gen4.h',
-)
-
-isl_gen6_files = files(
-  'isl_gen6.c',
-  'isl_gen6.h',
-)
-
-isl_gen7_files = files(
-  'isl_gen7.c',
-  'isl_gen7.h',
-)
-
-isl_gen8_files = files(
-  'isl_gen8.c',
-  'isl_gen8.h',
-)
-
-isl_gen9_files = files(
-  'isl_gen9.c',
-  'isl_gen9.h',
-)
+isl_gen4_files = files('isl_gen4.c')
+isl_gen6_files = files('isl_gen6.c')
+isl_gen7_files = files('isl_gen7.c')
+isl_gen8_files = files('isl_gen8.c')
+isl_gen9_files = files('isl_gen9.c')
 
 isl_gen_libs = []
 foreach g : [['40', isl_gen4_files], ['50', []], ['60', isl_gen6_files],
@@ -71,11 +52,8 @@ isl_format_layout_c = custom_target(
 
 libisl_files = files(
   'isl.c',
-  'isl.h',
   'isl_drm.c',
-  'isl_genX_priv.h',
   'isl_format.c',
-  'isl_priv.h',
   'isl_storage_image.c',
 )
 

@@ -20,12 +20,8 @@
 
 files_libblorp = files(
   'blorp.c',
-  'blorp.h',
   'blorp_blit.c',
   'blorp_clear.c',
-  'blorp_nir_builder.h',
-  'blorp_genX_exec.h',
-  'blorp_priv.h',
 )
 
 libblorp = static_library(

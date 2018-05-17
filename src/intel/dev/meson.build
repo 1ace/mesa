@@ -20,14 +20,9 @@
 
 # TODO: android?
 
-files_libintel_dev = files(
-  'gen_device_info.c',
-  'gen_device_info.h',
-)
-
 libintel_dev = static_library(
   ['intel_dev'],
-  files_libintel_dev,
+  files('gen_device_info.c'),
   include_directories : [inc_common, inc_intel, inc_drm_uapi],
   c_args : [c_vis_args, no_override_init_args],
 )
