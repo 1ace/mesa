@@ -22,15 +22,10 @@ inc_st_dri = include_directories('.')
 
 files_libdri = files(
   'dri_context.c',
-  'dri_context.h',
   'dri_drawable.c',
-  'dri_drawable.h',
   'dri_helpers.c',
-  'dri_helpers.h',
   'dri_query_renderer.c',
-  'dri_query_renderer.h',
   'dri_screen.c',
-  'dri_screen.h',
 )
 
 if with_dri
@@ -38,7 +33,7 @@ if with_dri
 endif
 
 if with_dri2
-  files_libdri += files('dri2.c', 'dri2_buffer.h')
+  files_libdri += files('dri2.c')
 endif
 
 libdri_c_args = []
