@@ -20,7 +20,7 @@
 
 libws_null = static_library(
   'ws_null',
-  files('null_sw_winsys.c', 'null_sw_winsys.h'),
+  files('null_sw_winsys.c'),
   c_args : c_vis_args,
   include_directories : [inc_gallium, inc_src, inc_gallium_aux, inc_include],
   build_by_default : false,
