@@ -31,31 +31,21 @@ files_libglx = files(
   'compsize.c',
   'create_context.c',
   'eval.c',
-  'glxclient.h',
   'glxcmds.c',
   'glxconfig.c',
-  'glxconfig.h',
   'glxcurrent.c',
   'glx_error.c',
-  'glx_error.h',
   'glxext.c',
   'glxextensions.c',
-  'glxextensions.h',
   'glxhash.c',
-  'glxhash.h',
   'glx_pbuffer.c',
   'glx_query.c',
   'indirect_glx.c',
-  'indirect_init.h',
   'indirect_texture_compression.c',
   'indirect_transpose_matrix.c',
   'indirect_vertex_array.c',
-  'indirect_vertex_array.h',
-  'indirect_vertex_array_priv.h',
   'indirect_vertex_program.c',
   'indirect_window_pos.c',
-  'packrender.h',
-  'packsingle.h',
   'pixel.c',
   'pixelstore.c',
   'query_renderer.c',
@@ -73,12 +63,10 @@ extra_ld_args_libgl = []
 if with_dri
   files_libglx += files(
     'dri_common.c',
-    'dri_common.h',
     'dri_common_query_renderer.c',
     'dri_common_interop.c',
     'xfont.c',
     'drisw_glx.c',
-    'drisw_priv.h',
   )
 endif
 
@@ -87,18 +75,13 @@ if with_dri and with_dri_platform == 'drm' and dep_libdrm.found()
   files_libglx += files(
     'dri2.c',
     'dri2_glx.c',
-    'dri2.h',
-    'dri2_priv.h',
     'dri_glx.c',
-    'dri_sarea.h',
     'XF86dri.c',
-    'xf86dri.h',
-    'xf86dristr.h',
   )
 endif
 
 if with_dri3
-  files_libglx += files('dri3_glx.c', 'dri3_priv.h')
+  files_libglx += files('dri3_glx.c')
 endif
 
 if with_dri_platform == 'apple'
@@ -125,10 +108,7 @@ else
   gl_lib_version = '0.0.0'
   files_libglx += files(
     'g_glxglvnddispatchfuncs.c',
-    'g_glxglvnddispatchindices.h',
     'glxglvnd.c',
-    'glxglvnd.h',
-    'glxglvnddispatchfuncs.h',
   )
 endif
 

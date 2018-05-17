@@ -39,7 +39,6 @@ pkg.generate(
 # library for using the Windows-DRI server extension
 files_libwindowsdri = files(
   'xwindowsdri.c',
-  'xwindowsdri.h',
 )
 
 libwindowsdri = static_library(
@@ -52,11 +51,8 @@ libwindowsdri = static_library(
 # library for native GL on windows
 files_libwindowsglx = files(
   'windowsgl.c',
-  'windowsgl.h',
-  'windowsgl_internal.h',
   'windows_drawable.c',
   'wgl.c',
-  'wgl.h',
 )
 
 libwindowsglx = static_library(

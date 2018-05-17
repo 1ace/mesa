@@ -24,9 +24,7 @@ if with_shared_glapi
     'create_context_unittest.cpp',
     'enum_sizes.cpp',
     'fake_glx_screen.cpp',
-    'fake_glx_screen.h',
     'indirect_api.cpp',
-    'mock_xdisplay.h',
     'query_renderer_unittest.cpp',
   )
   if with_dri2
