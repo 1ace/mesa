@@ -33,7 +33,6 @@ libbroadcom_compiler_files = files(
   'v3d33_tex.c',
   'v3d40_tex.c',
   'v3d33_vpm_setup.c',
-  'v3d_compiler.h',
   'v3d_nir_lower_io.c',
   'v3d_nir_lower_txf_ms.c',
 )
