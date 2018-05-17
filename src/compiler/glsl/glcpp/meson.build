@@ -37,7 +37,7 @@ glcpp_lex = custom_target(
 
 libglcpp = static_library(
   'glcpp',
-  [glcpp_lex, glcpp_parse, files('glcpp.h', 'pp.c')],
+  [glcpp_lex, glcpp_parse, files('pp.c')],
   link_with : libmesa_util,
   include_directories : [inc_common],
   c_args : [c_vis_args, no_override_init_args, c_msvc_compat_args],
