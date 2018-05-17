@@ -28,24 +28,14 @@ sid_tables_h = custom_target(
 
 amd_common_files = files(
   'ac_binary.c',
-  'ac_binary.h',
-  'ac_exp_param.h',
   'ac_llvm_build.c',
-  'ac_llvm_build.h',
   'ac_llvm_helper.cpp',
   'ac_llvm_util.c',
-  'ac_llvm_util.h',
-  'ac_shader_abi.h',
   'ac_shader_util.c',
-  'ac_shader_util.h',
   'ac_nir_to_llvm.c',
-  'ac_nir_to_llvm.h',
   'ac_gpu_info.c',
-  'ac_gpu_info.h',
   'ac_surface.c',
-  'ac_surface.h',
   'ac_debug.c',
-  'ac_debug.h',
 )
 
 libamd_common = static_library(
