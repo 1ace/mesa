@@ -25,15 +25,9 @@ inc_spirv = include_directories('spirv')
 
 files_libcompiler = files(
   'blob.c',
-  'blob.h',
-  'builtin_type_macros.h',
   'glsl_types.cpp',
-  'glsl_types.h',
   'nir_types.cpp',
-  'nir_types.h',
   'shader_enums.c',
-  'shader_enums.h',
-  'shader_info.h',
 )
 
 ir_expression_operation_h = custom_target(
