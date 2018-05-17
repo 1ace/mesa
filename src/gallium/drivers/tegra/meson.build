@@ -20,8 +20,6 @@
 
 files_tegra = files(
   'tegra_context.c',
-  'tegra_context.h',
-  'tegra_resource.h',
   'tegra_screen.c',
 )
 
