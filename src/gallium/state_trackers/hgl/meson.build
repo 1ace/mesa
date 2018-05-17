@@ -20,8 +20,6 @@
 
 files_libsthgl = files(
   'bitmap_wrapper.cpp',
-  'bitmap_wrapper.h',
-  'hgl_context.h',
   'hgl.c',
 )
 
