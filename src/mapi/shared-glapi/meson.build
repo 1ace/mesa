@@ -22,9 +22,7 @@ files_mapi_glapi = files(
   '../entry.c',
   '../mapi_glapi.c',
   '../stub.c',
-  '../stub.h',
   '../table.c',
-  '../table.h',
 )
 
 shared_glapi_mapi_tmp_h = custom_target(

@@ -20,9 +20,7 @@
 
 files_mapi_util = files(
   'u_current.c',
-  'u_current.h',
   'u_execmem.c',
-  'u_execmem.h',
 )
 
 mapi_abi_py = files('mapi_abi.py')
